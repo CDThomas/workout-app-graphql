@@ -34,14 +34,22 @@ const resolvers = {
 };
 
 const server = new GraphQLServer({
-  typeDefs: "src/server/schema.graphql",
+  typeDefs: path.resolve(__dirname, "schema.graphql"),
   resolvers,
   context: req => ({
     ...req,
     db: new Prisma({
-      typeDefs: "src/server/generated/prisma.graphql",
+      typeDefs: path.resolve(__dirname, "generated/prisma.graphql"),
       endpoint: "http://localhost:4466"
     })
   })
 });
-server.start(() => console.log("Server is running on http://localhost:4000"));
+server.start(
+  {
+    endpoint: "/graphql",
+    getEndpoint: true,
+    subscriptions: "/subscriptions",
+    playground: "/playground"
+  },
+  ({ port }) => console.log(`Server is running on http://localhost:${port}`)
+);

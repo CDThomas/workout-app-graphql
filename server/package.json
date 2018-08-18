@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "get-schema": "graphql get-schema --endpoint http://localhost:4466 --output ./src/server/generated/prisma.graphql --no-all",
-    "start": "nodemon ./src/server/index.js"
+    "get-schema": "graphql get-schema --endpoint http://localhost:4466 --output ./src/generated/prisma.graphql --no-all",
+    "start": "nodemon ./src/index.js",
+    "playground": "cd prisma && prisma playground"
   },
   "dependencies": {
     "graphql": "^0.13.2",
