@@ -1,0 +1,11 @@
+# import User, Routine from "./generated/prisma.graphql"
+
+type Query {
+  routine(routine: ID!): Routine
+  routines: [Routine!]!
+  routinesByUser(userId: ID!): [Routine!]!
+}
+
+type Mutation {
+  createUser(name: String!): User
+}

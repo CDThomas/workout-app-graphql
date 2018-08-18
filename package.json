@@ -1,0 +1,19 @@
+{
+  "name": "workout-app-graphql",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "get-schema": "graphql get-schema --endpoint http://localhost:4466 --output ./src/server/generated/prisma.graphql --no-all",
+    "start": "nodemon ./src/server/index.js"
+  },
+  "dependencies": {
+    "graphql": "^0.13.2",
+    "graphql-yoga": "^1.16.1",
+    "prisma-binding": "^2.1.4"
+  },
+  "devDependencies": {
+    "graphql-cli": "^2.16.5",
+    "nodemon": "^1.18.3"
+  }
+}
