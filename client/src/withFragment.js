@@ -1,14 +1,13 @@
 import React from "react";
 import { filter } from "graphql-anywhere";
-
-// TODO: Filter out data that parent fragments don't need, but their children do
+import hoistNonReactStatics from "hoist-non-react-statics";
 
 const getDisplayName = WrappedComponent => {
   return WrappedComponent.displayName || WrappedComponent.name || "Component";
 };
 
-const createFragmentContainer = (Component, fragments) => {
-  const FragmentContainer = props => {
+const withFragment = (Component, fragments) => {
+  const ApolloFragment = props => {
     const fragmentProps = Object.keys(fragments).reduce(
       (fragmentProps, propName) => {
         if (props[propName]) {
@@ -23,12 +22,12 @@ const createFragmentContainer = (Component, fragments) => {
     );
     return <Component {...props} {...fragmentProps} />;
   };
-  FragmentContainer.fragments = fragments;
-  FragmentContainer.displayName = `FragmentContainer(${getDisplayName(
-    Component
-  )})`;
 
-  return FragmentContainer;
+  hoistNonReactStatics(ApolloFragment, Component);
+  ApolloFragment.fragments = fragments;
+  ApolloFragment.displayName = `ApolloFragment(${getDisplayName(Component)})`;
+
+  return ApolloFragment;
 };
 
-export default createFragmentContainer;
+export default withFragment;

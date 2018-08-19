@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import gql from "graphql-tag";
-import createFragmentContainer from "./createFragmentContainer";
+import withFragment from "./withFragment";
 import RoutineItem from "./RoutineItem";
 
 const RoutineList = ({ data }) => {
@@ -17,7 +17,8 @@ const RoutineList = ({ data }) => {
   );
 };
 
-const RoutineListContainer = createFragmentContainer(RoutineList, {
+export { RoutineList };
+export default withFragment(RoutineList, {
   data: gql`
     fragment RoutineList_data on Query {
       routines {
@@ -28,6 +29,3 @@ const RoutineListContainer = createFragmentContainer(RoutineList, {
     ${RoutineItem.fragments.routine}
   `
 });
-
-export { RoutineList };
-export default RoutineListContainer;
