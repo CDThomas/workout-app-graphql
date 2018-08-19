@@ -1,5 +1,6 @@
 const { GraphQLServer } = require("graphql-yoga");
 const { Prisma } = require("prisma-binding");
+const morgan = require("morgan");
 const path = require("path");
 
 const resolvers = {
@@ -44,6 +45,8 @@ const server = new GraphQLServer({
     })
   })
 });
+
+server.express.use(morgan("dev"));
 server.start(
   {
     endpoint: "/graphql",
