@@ -1,12 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import gql from "graphql-tag";
 import createFragmentContainer from "./createFragmentContainer";
 
 const RoutineItem = ({ routine }) => {
-  const { name } = routine;
+  const { id, name } = routine;
   return (
     <li>
-      <p>{`Name: ${name}`}</p>
+      <Link to={`/routines/${id}`}>{name}</Link>
     </li>
   );
 };
@@ -14,6 +15,7 @@ const RoutineItem = ({ routine }) => {
 const RoutineItemContainer = createFragmentContainer(RoutineItem, {
   routine: gql`
     fragment RoutineItem_routine on Routine {
+      id
       name
     }
   `

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import ApolloClient from "apollo-boost";
-import { ApolloProvider, Query } from "react-apollo";
-import gql from "graphql-tag";
-import RoutineList from "./RoutineList";
+import { ApolloProvider } from "react-apollo";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { RoutineListPage, RoutineEditorPage } from "./pages";
 import "./App.css";
 
 const client = new ApolloClient({});
@@ -11,21 +11,12 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <Query
-          query={gql`
-            query AppQuery {
-              ...RoutineList_data
-            }
-            ${RoutineList.fragments.data}
-          `}
-        >
-          {({ loading, error, data }) => {
-            if (loading) return <p>Loading...</p>;
-            if (error) return <p>Error :(</p>;
-
-            return <RoutineList data={data} />;
-          }}
-        </Query>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={RoutineListPage} />
+            <Route path="/routines/:id" component={RoutineEditorPage} />
+          </Switch>
+        </Router>
       </ApolloProvider>
     );
   }
