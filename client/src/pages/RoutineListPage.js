@@ -1,7 +1,7 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-import RoutineList from "../RoutineList";
+import RoutineList from "../components/RoutineList";
 
 const RoutineListPage = () => {
   return (

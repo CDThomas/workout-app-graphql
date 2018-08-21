@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import gql from "graphql-tag";
-import withFragment from "./withFragment";
+import withFragment from "../utils/withFragment";
 import RoutineItem from "./RoutineItem";
 
 const RoutineList = ({ data }) => {

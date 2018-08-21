@@ -3,7 +3,7 @@ import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import { withRouter } from "react-router-dom";
 
-const RoutineListPage = ({ match }) => {
+const RoutineEditorPage = ({ match }) => {
   const id = match.params.id;
   return (
     <Query
@@ -26,4 +26,4 @@ const RoutineListPage = ({ match }) => {
   );
 };
 
-export default withRouter(RoutineListPage);
+export default withRouter(RoutineEditorPage);
