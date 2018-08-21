@@ -1,7 +1,15 @@
 # source: http://localhost:4466
-# timestamp: Sat Aug 18 2018 20:37:22 GMT+1000 (Australian Eastern Standard Time)
+# timestamp: Tue Aug 21 2018 20:04:14 GMT+1000 (Australian Eastern Standard Time)
+
+type AggregateExercise {
+  count: Int!
+}
 
 type AggregateRoutine {
+  count: Int!
+}
+
+type AggregateRoutineSet {
   count: Int!
 }
 
@@ -14,6 +22,210 @@ type BatchPayload {
   count: Long!
 }
 
+type Exercise implements Node {
+  id: ID!
+  name: String!
+}
+
+"""A connection to a list of items."""
+type ExerciseConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ExerciseEdge]!
+  aggregate: AggregateExercise!
+}
+
+input ExerciseCreateInput {
+  name: String!
+}
+
+input ExerciseCreateOneInput {
+  create: ExerciseCreateInput
+  connect: ExerciseWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type ExerciseEdge {
+  """The item at the end of the edge."""
+  node: Exercise!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ExerciseOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type ExercisePreviousValues {
+  id: ID!
+  name: String!
+}
+
+type ExerciseSubscriptionPayload {
+  mutation: MutationType!
+  node: Exercise
+  updatedFields: [String!]
+  previousValues: ExercisePreviousValues
+}
+
+input ExerciseSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ExerciseSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ExerciseSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ExerciseSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ExerciseWhereInput
+}
+
+input ExerciseUpdateDataInput {
+  name: String
+}
+
+input ExerciseUpdateInput {
+  name: String
+}
+
+input ExerciseUpdateOneInput {
+  create: ExerciseCreateInput
+  connect: ExerciseWhereUniqueInput
+  delete: Boolean
+  update: ExerciseUpdateDataInput
+  upsert: ExerciseUpsertNestedInput
+}
+
+input ExerciseUpsertNestedInput {
+  update: ExerciseUpdateDataInput!
+  create: ExerciseCreateInput!
+}
+
+input ExerciseWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ExerciseWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ExerciseWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ExerciseWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+}
+
+input ExerciseWhereUniqueInput {
+  id: ID
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -22,17 +234,29 @@ scalar Long
 
 type Mutation {
   createRoutine(data: RoutineCreateInput!): Routine!
+  createRoutineSet(data: RoutineSetCreateInput!): RoutineSet!
   createUser(data: UserCreateInput!): User!
+  createExercise(data: ExerciseCreateInput!): Exercise!
   updateRoutine(data: RoutineUpdateInput!, where: RoutineWhereUniqueInput!): Routine
+  updateRoutineSet(data: RoutineSetUpdateInput!, where: RoutineSetWhereUniqueInput!): RoutineSet
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateExercise(data: ExerciseUpdateInput!, where: ExerciseWhereUniqueInput!): Exercise
   deleteRoutine(where: RoutineWhereUniqueInput!): Routine
+  deleteRoutineSet(where: RoutineSetWhereUniqueInput!): RoutineSet
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteExercise(where: ExerciseWhereUniqueInput!): Exercise
   upsertRoutine(where: RoutineWhereUniqueInput!, create: RoutineCreateInput!, update: RoutineUpdateInput!): Routine!
+  upsertRoutineSet(where: RoutineSetWhereUniqueInput!, create: RoutineSetCreateInput!, update: RoutineSetUpdateInput!): RoutineSet!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertExercise(where: ExerciseWhereUniqueInput!, create: ExerciseCreateInput!, update: ExerciseUpdateInput!): Exercise!
   updateManyRoutines(data: RoutineUpdateInput!, where: RoutineWhereInput): BatchPayload!
+  updateManyRoutineSets(data: RoutineSetUpdateInput!, where: RoutineSetWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
+  updateManyExercises(data: ExerciseUpdateInput!, where: ExerciseWhereInput): BatchPayload!
   deleteManyRoutines(where: RoutineWhereInput): BatchPayload!
+  deleteManyRoutineSets(where: RoutineSetWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyExercises(where: ExerciseWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -64,11 +288,17 @@ type PageInfo {
 
 type Query {
   routines(where: RoutineWhereInput, orderBy: RoutineOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Routine]!
+  routineSets(where: RoutineSetWhereInput, orderBy: RoutineSetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoutineSet]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  exercises(where: ExerciseWhereInput, orderBy: ExerciseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exercise]!
   routine(where: RoutineWhereUniqueInput!): Routine
+  routineSet(where: RoutineSetWhereUniqueInput!): RoutineSet
   user(where: UserWhereUniqueInput!): User
+  exercise(where: ExerciseWhereUniqueInput!): Exercise
   routinesConnection(where: RoutineWhereInput, orderBy: RoutineOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoutineConnection!
+  routineSetsConnection(where: RoutineSetWhereInput, orderBy: RoutineSetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoutineSetConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  exercisesConnection(where: ExerciseWhereInput, orderBy: ExerciseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ExerciseConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -80,7 +310,8 @@ type Query {
 type Routine implements Node {
   id: ID!
   name: String!
-  creator(where: UserWhereInput): User
+  creator(where: UserWhereInput): User!
+  sets(where: RoutineSetWhereInput, orderBy: RoutineSetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoutineSet!]
 }
 
 """A connection to a list of items."""
@@ -95,7 +326,18 @@ type RoutineConnection {
 
 input RoutineCreateInput {
   name: String!
-  creator: UserCreateOneInput
+  creator: UserCreateOneInput!
+  sets: RoutineSetCreateManyWithoutRoutineInput
+}
+
+input RoutineCreateOneWithoutSetsInput {
+  create: RoutineCreateWithoutSetsInput
+  connect: RoutineWhereUniqueInput
+}
+
+input RoutineCreateWithoutSetsInput {
+  name: String!
+  creator: UserCreateOneInput!
 }
 
 """An edge in a connection."""
@@ -121,6 +363,213 @@ enum RoutineOrderByInput {
 type RoutinePreviousValues {
   id: ID!
   name: String!
+}
+
+type RoutineSet implements Node {
+  id: ID!
+  routine(where: RoutineWhereInput): Routine!
+  exercise(where: ExerciseWhereInput): Exercise!
+  setCount: Int!
+}
+
+"""A connection to a list of items."""
+type RoutineSetConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [RoutineSetEdge]!
+  aggregate: AggregateRoutineSet!
+}
+
+input RoutineSetCreateInput {
+  setCount: Int
+  routine: RoutineCreateOneWithoutSetsInput!
+  exercise: ExerciseCreateOneInput!
+}
+
+input RoutineSetCreateManyWithoutRoutineInput {
+  create: [RoutineSetCreateWithoutRoutineInput!]
+  connect: [RoutineSetWhereUniqueInput!]
+}
+
+input RoutineSetCreateWithoutRoutineInput {
+  setCount: Int
+  exercise: ExerciseCreateOneInput!
+}
+
+"""An edge in a connection."""
+type RoutineSetEdge {
+  """The item at the end of the edge."""
+  node: RoutineSet!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum RoutineSetOrderByInput {
+  id_ASC
+  id_DESC
+  setCount_ASC
+  setCount_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type RoutineSetPreviousValues {
+  id: ID!
+  setCount: Int!
+}
+
+type RoutineSetSubscriptionPayload {
+  mutation: MutationType!
+  node: RoutineSet
+  updatedFields: [String!]
+  previousValues: RoutineSetPreviousValues
+}
+
+input RoutineSetSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RoutineSetSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RoutineSetSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RoutineSetSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: RoutineSetWhereInput
+}
+
+input RoutineSetUpdateInput {
+  setCount: Int
+  routine: RoutineUpdateOneWithoutSetsInput
+  exercise: ExerciseUpdateOneInput
+}
+
+input RoutineSetUpdateManyWithoutRoutineInput {
+  create: [RoutineSetCreateWithoutRoutineInput!]
+  connect: [RoutineSetWhereUniqueInput!]
+  disconnect: [RoutineSetWhereUniqueInput!]
+  delete: [RoutineSetWhereUniqueInput!]
+  update: [RoutineSetUpdateWithWhereUniqueWithoutRoutineInput!]
+  upsert: [RoutineSetUpsertWithWhereUniqueWithoutRoutineInput!]
+}
+
+input RoutineSetUpdateWithoutRoutineDataInput {
+  setCount: Int
+  exercise: ExerciseUpdateOneInput
+}
+
+input RoutineSetUpdateWithWhereUniqueWithoutRoutineInput {
+  where: RoutineSetWhereUniqueInput!
+  data: RoutineSetUpdateWithoutRoutineDataInput!
+}
+
+input RoutineSetUpsertWithWhereUniqueWithoutRoutineInput {
+  where: RoutineSetWhereUniqueInput!
+  update: RoutineSetUpdateWithoutRoutineDataInput!
+  create: RoutineSetCreateWithoutRoutineInput!
+}
+
+input RoutineSetWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RoutineSetWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RoutineSetWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RoutineSetWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  setCount: Int
+
+  """All values that are not equal to given value."""
+  setCount_not: Int
+
+  """All values that are contained in given list."""
+  setCount_in: [Int!]
+
+  """All values that are not contained in given list."""
+  setCount_not_in: [Int!]
+
+  """All values less than the given value."""
+  setCount_lt: Int
+
+  """All values less than or equal the given value."""
+  setCount_lte: Int
+
+  """All values greater than the given value."""
+  setCount_gt: Int
+
+  """All values greater than or equal the given value."""
+  setCount_gte: Int
+  routine: RoutineWhereInput
+  exercise: ExerciseWhereInput
+}
+
+input RoutineSetWhereUniqueInput {
+  id: ID
 }
 
 type RoutineSubscriptionPayload {
@@ -165,6 +614,25 @@ input RoutineSubscriptionWhereInput {
 input RoutineUpdateInput {
   name: String
   creator: UserUpdateOneInput
+  sets: RoutineSetUpdateManyWithoutRoutineInput
+}
+
+input RoutineUpdateOneWithoutSetsInput {
+  create: RoutineCreateWithoutSetsInput
+  connect: RoutineWhereUniqueInput
+  delete: Boolean
+  update: RoutineUpdateWithoutSetsDataInput
+  upsert: RoutineUpsertWithoutSetsInput
+}
+
+input RoutineUpdateWithoutSetsDataInput {
+  name: String
+  creator: UserUpdateOneInput
+}
+
+input RoutineUpsertWithoutSetsInput {
+  update: RoutineUpdateWithoutSetsDataInput!
+  create: RoutineCreateWithoutSetsInput!
 }
 
 input RoutineWhereInput {
@@ -257,6 +725,9 @@ input RoutineWhereInput {
   """All values not ending with the given string."""
   name_not_ends_with: String
   creator: UserWhereInput
+  sets_every: RoutineSetWhereInput
+  sets_some: RoutineSetWhereInput
+  sets_none: RoutineSetWhereInput
 }
 
 input RoutineWhereUniqueInput {
@@ -265,7 +736,9 @@ input RoutineWhereUniqueInput {
 
 type Subscription {
   routine(where: RoutineSubscriptionWhereInput): RoutineSubscriptionPayload
+  routineSet(where: RoutineSetSubscriptionWhereInput): RoutineSetSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  exercise(where: ExerciseSubscriptionWhereInput): ExerciseSubscriptionPayload
 }
 
 type User implements Node {
@@ -367,7 +840,6 @@ input UserUpdateInput {
 input UserUpdateOneInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
-  disconnect: Boolean
   delete: Boolean
   update: UserUpdateDataInput
   upsert: UserUpsertNestedInput

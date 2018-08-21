@@ -6,5 +6,18 @@ type User {
 type Routine {
   id: ID! @unique
   name: String!
-  creator: User
+  creator: User!
+  sets: [RoutineSet!]!
+}
+
+type RoutineSet {
+  id: ID! @unique
+  routine: Routine!
+  exercise: Exercise!
+  setCount: Int! @default(value: 0)
+}
+
+type Exercise {
+  id: ID! @unique
+  name: String!
 }
