@@ -1,8 +1,13 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import styled from "react-emotion";
 import RoutineList from "../components/RoutineList";
 import Container from "../components/Container";
+
+const Content = styled("div")`
+  padding: 25px;
+`;
 
 const RoutineListPage = () => {
   return (
@@ -19,8 +24,10 @@ const RoutineListPage = () => {
         if (error) return <p>Error :(</p>;
 
         return (
-          <Container>
-            <RoutineList data={data} />;
+          <Container centered>
+            <Content>
+              <RoutineList data={data} />
+            </Content>
           </Container>
         );
       }}

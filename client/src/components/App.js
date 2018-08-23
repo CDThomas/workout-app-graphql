@@ -9,36 +9,36 @@ import {
 } from "react-router-dom";
 import { RoutineListPage, RoutineEditorPage } from "../pages";
 import HeaderNav from "./HeaderNav";
-import { css } from "react-emotion";
+import styled from "react-emotion";
 
 const client = new ApolloClient({});
+
+const Main = styled("main")`
+  position: relative;
+  padding-top: 50px;
+  z-index: 0;
+`;
+
+const Wrapper = styled("div")`
+  background-color: #f9f9f9;
+  min-height: 100%;
+`;
 
 class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
         <Router>
-          <div
-            className={css`
-              background-color: #f9f9f9;
-              min-height: 100%;
-            `}
-          >
+          <Wrapper>
             <HeaderNav />
-            <div
-              className={css`
-                position: relative;
-                padding-top: 50px;
-                z-index: 0;
-              `}
-            >
+            <Main>
               <Switch>
                 <Redirect exact from="/" to="/routines" />
                 <Route exact path="/routines" component={RoutineListPage} />
               </Switch>
               <Route path="/routines/:id" component={RoutineEditorPage} />
-            </div>
-          </div>
+            </Main>
+          </Wrapper>
         </Router>
       </ApolloProvider>
     );

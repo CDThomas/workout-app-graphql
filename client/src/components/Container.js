@@ -1,7 +1,8 @@
 import styled from "react-emotion";
 
-const Container = styled("div")`
-  padding: 30px 0;
-`;
+const Container = styled("div")(({ centered }) => ({
+  display: "flex",
+  justifyContent: centered ? "center" : "flex-start"
+}));
 
 export default Container;
