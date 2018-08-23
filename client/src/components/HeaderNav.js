@@ -57,15 +57,17 @@ const NavLink = props => {
   );
 };
 
-export default () => {
+export default function HeaderNav() {
   return (
     <Header>
       <Nav>
         <div>
           <Logo />
-          <NavLink to="/routines">Routines</NavLink>
+          <NavLink exact to="/routines">
+            Routines
+          </NavLink>
         </div>
       </Nav>
     </Header>
   );
-};
+}

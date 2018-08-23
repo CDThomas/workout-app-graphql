@@ -2,6 +2,7 @@ import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
 import RoutineList from "../components/RoutineList";
+import Container from "../components/Container";
 
 const RoutineListPage = () => {
   return (
@@ -17,7 +18,11 @@ const RoutineListPage = () => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
 
-        return <RoutineList data={data} />;
+        return (
+          <Container>
+            <RoutineList data={data} />;
+          </Container>
+        );
       }}
     </Query>
   );
