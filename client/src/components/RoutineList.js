@@ -24,7 +24,6 @@ const RoutineList = ({ data }) => {
   );
 };
 
-export { RoutineList };
 export default withFragment(RoutineList, {
   data: gql`
     fragment RoutineList_data on Query {

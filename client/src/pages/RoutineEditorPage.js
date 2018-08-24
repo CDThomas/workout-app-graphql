@@ -4,14 +4,14 @@ import gql from "graphql-tag";
 import { withRouter } from "react-router-dom";
 import styled from "react-emotion";
 import Container from "../components/Container";
-import SideBar from "../components/SideBar";
-import List from "../components/List";
-import { Header, Title } from "../components/typography";
+import EditorSideBar from "../components/EditorSideBar";
+import EditorMain from "../components/EditorMain";
 
 const Content = styled("div")`
   /* Offset sidebar width */
   margin-left: 420px;
   padding: 25px;
+  flex: 1;
 `;
 
 const RoutineEditorPage = ({ match }) => {
@@ -20,10 +20,11 @@ const RoutineEditorPage = ({ match }) => {
     <Query
       query={gql`
         query RoutineEditorQuery($id: ID!) {
-          routine(id: $id) {
-            name
-          }
+          ...EditorMain_data
+          ...EditorSideBar_data
         }
+        ${EditorSideBar.fragments.data}
+        ${EditorMain.fragments.data}
       `}
       variables={{ id }}
     >
@@ -33,22 +34,9 @@ const RoutineEditorPage = ({ match }) => {
 
         return (
           <Container>
-            <SideBar>
-              <SideBar.Header>
-                <Header>Exercises</Header>
-              </SideBar.Header>
-              <SideBar.Content>
-                <List>
-                  {Array.from({ length: 50 }).map((_, i) => (
-                    <List.Item key={i}>
-                      <Title>Excercise #{i + 1}</Title>
-                    </List.Item>
-                  ))}
-                </List>
-              </SideBar.Content>
-            </SideBar>
+            <EditorSideBar data={data} />
             <Content>
-              <Header>{data.routine.name}</Header>
+              <EditorMain data={data} />
             </Content>
           </Container>
         );
