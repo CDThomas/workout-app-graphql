@@ -5,6 +5,9 @@ const path = require("path");
 
 const resolvers = {
   Query: {
+    exercises(parent, args, context, info) {
+      return context.db.query.exercises(null, info);
+    },
     routine(parent, args, context, info) {
       return context.db.query.routine({ where: { id: args.id } }, info);
     },

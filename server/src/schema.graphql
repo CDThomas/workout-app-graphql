@@ -1,6 +1,7 @@
-# import User, Routine from "./generated/prisma.graphql"
+# import User, Routine, Exercise from "./generated/prisma.graphql"
 
 type Query {
+  exercises: [Exercise!]!
   routine(id: ID!): Routine
   routines: [Routine!]!
   routinesByUser(userId: ID!): [Routine!]!
