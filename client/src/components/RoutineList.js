@@ -13,7 +13,7 @@ const RoutineList = ({ data }) => {
       <Panel.Header>
         <Header>Routines</Header>
       </Panel.Header>
-      <Panel.Content>
+      <Panel.Content fullWidth>
         <List>
           {routines.map(routine => (
             <RoutineItem key={routine.id} routine={routine} />
