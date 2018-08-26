@@ -1,0 +1,86 @@
+.Button {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .6px;
+  line-height: 16px;
+  text-transform: uppercase;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  outline: 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  background-color: #0f82e6;
+  border-color: #0f82e6;
+  cursor: pointer;
+}
+
+.Button--small {
+  height: 24px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: .3px;
+  line-height: 16px;
+  text-transform: uppercase;
+}
+
+.Button--medium {
+  height: 34px;
+  padding: 0 13px
+}
+
+.Button--blue {
+  background-color: #0f82e6;
+  border-color: #0f82e6;
+  color: #fff;
+}
+
+/* OK, this is actually getting painful now */
+.Button--blue:hover, .Button--blue:focus {
+  /* This is darkened 10% */
+  /* TODO: lighten and darken color fn's would be nice */
+  background-color: #0069CD;
+  border-color: #0069CD;
+}
+
+.Button--white {
+  background-color: #fff;
+  border-color: #e8e8e8;
+  color: #000;
+}
+
+.Button--white:hover, .Button--white:focus {
+  background-color: #e8e8e8;
+  border-color: #e8e8e8;
+}
+
+.Button--red {
+  background-color: #fff;
+  border: 1px solid #db2828;
+  color: #db2828;
+}
+
+.Button--red:hover, .Button--red:focus {
+  background-color: #fff0f0;
+}
+
+.Button--floatedLeft {
+  float: left;
+}
+
+.Button--floatedRight {
+  float: right;
+}
+
+.Button--disabled,
+.Button--disabled:hover {
+  cursor: default;
+  opacity: .45;
+  background-image: none;
+  box-shadow: none;
+  pointer-events: none;
+}
