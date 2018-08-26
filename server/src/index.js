@@ -26,6 +26,14 @@ const resolvers = {
     }
   },
   Mutation: {
+    createExercise(parent, args, context, info) {
+      return context.db.mutation.createExercise(
+        {
+          data: { name: args.name }
+        },
+        info
+      );
+    },
     createUser(parent, args, context, info) {
       return context.db.mutation.createUser(
         {
