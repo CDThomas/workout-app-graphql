@@ -18,9 +18,12 @@ const Header = styled("header")`
   justify-content: space-between;
 `;
 
-const Content = styled("div")`
-  overflow: auto;
-`;
+const Content = styled("div")(({ fullWidth = false }) => {
+  return {
+    overflow: "auto",
+    padding: fullWidth ? "0" : "0 20px 20px 20px"
+  };
+});
 
 Panel.Header = Header;
 Panel.Content = Content;
