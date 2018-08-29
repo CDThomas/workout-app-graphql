@@ -34,6 +34,21 @@ const resolvers = {
         info
       );
     },
+    createRoutineSet(parent, args, context, info) {
+      const {
+        input: { routineId, exerciseId }
+      } = args;
+
+      return context.db.mutation.createRoutineSet(
+        {
+          data: {
+            routine: { connect: { id: routineId } },
+            exercise: { connect: { id: exerciseId } }
+          }
+        },
+        info
+      );
+    },
     createUser(parent, args, context, info) {
       return context.db.mutation.createUser(
         {
