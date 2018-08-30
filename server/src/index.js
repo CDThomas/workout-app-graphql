@@ -49,6 +49,15 @@ const resolvers = {
         info
       );
     },
+    deleteRoutineSet(parent, args, context, info) {
+      const { id } = args;
+      return context.db.mutation.deleteRoutineSet(
+        {
+          where: { id }
+        },
+        info
+      );
+    },
     createUser(parent, args, context, info) {
       return context.db.mutation.createUser(
         {

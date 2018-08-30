@@ -3,6 +3,9 @@ import gql from "graphql-tag";
 import withFragment from "../utils/withFragment";
 import styled from "react-emotion";
 import { Header, Title } from "../components/typography";
+import Button from "./Button";
+import { Mutation } from "react-apollo";
+import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
 
 const Card = styled("div")`
   background-color: #fff;
@@ -13,20 +16,79 @@ const Card = styled("div")`
   flex-direction: column;
 `;
 
-const SetCard = ({ set }) => {
+const BottomRow = styled("div")`
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+`;
+
+// const MainMuscleWorked = styled("span")`
+//   font-weight: 400;
+//   text-transform: uppercase;
+//   font-size: 14px;
+//   letter-spacing: 0.3px;
+//   color: #999;
+// `;
+
+const SetCard = ({ set, routineId }) => {
+  const { id, exercise } = set;
+
   return (
     <Card>
-      <Title>{set.exercise.name}</Title>
+      <Title>{exercise.name}</Title>
+      <BottomRow>
+        {/* <MainMuscleWorked>Chest</MainMuscleWorked> */}
+        <Mutation
+          mutation={gql`
+            mutation DeleteRoutineSet($id: ID!) {
+              deleteRoutineSet(id: $id) {
+                id
+              }
+            }
+          `}
+          update={(cache, { data: { deleteRoutineSet: deletedSet } }) => {
+            // TODO: is there a better way to share queries?
+
+            const data = cache.readQuery({
+              query: ROUTINE_EDITOR_QUERY,
+              variables: { id: routineId }
+            });
+
+            data.routine.sets = data.routine.sets.filter(
+              set => set.id !== deletedSet.id
+            );
+
+            cache.writeQuery({
+              query: ROUTINE_EDITOR_QUERY,
+              variables: { id: routineId },
+              data
+            });
+          }}
+        >
+          {deleteRoutineSet => (
+            <Button
+              size="small"
+              color="white"
+              onClick={() => {
+                deleteRoutineSet({ variables: { id } });
+              }}
+            >
+              Delete
+            </Button>
+          )}
+        </Mutation>
+      </BottomRow>
     </Card>
   );
 };
 
-const SetList = ({ sets }) => {
+const SetList = ({ sets, routineId }) => {
   return (
     <ol>
       {sets.map(set => (
         <li key={set.id}>
-          <SetCard set={set} />
+          <SetCard set={set} routineId={routineId} />
         </li>
       ))}
     </ol>
@@ -35,10 +97,11 @@ const SetList = ({ sets }) => {
 
 const EditorMain = ({ data }) => {
   const { routine } = data;
+
   return (
     <Fragment>
       <Header>{routine.name}</Header>
-      <SetList sets={routine.sets} />
+      <SetList sets={routine.sets} routineId={routine.id} />
     </Fragment>
   );
 };
@@ -47,6 +110,7 @@ export default withFragment(EditorMain, {
   data: gql`
     fragment EditorMain_data on Query {
       routine(id: $id) {
+        id
         name
         sets {
           id

@@ -14,20 +14,19 @@ const Content = styled("div")`
   flex: 1;
 `;
 
+const ROUTINE_EDITOR_QUERY = gql`
+  query RoutineEditorQuery($id: ID!) {
+    ...EditorMain_data
+    ...EditorSideBar_data
+  }
+  ${EditorSideBar.fragments.data}
+  ${EditorMain.fragments.data}
+`;
+
 const RoutineEditorPage = ({ match }) => {
   const id = match.params.id;
   return (
-    <Query
-      query={gql`
-        query RoutineEditorQuery($id: ID!) {
-          ...EditorMain_data
-          ...EditorSideBar_data
-        }
-        ${EditorSideBar.fragments.data}
-        ${EditorMain.fragments.data}
-      `}
-      variables={{ id }}
-    >
+    <Query query={ROUTINE_EDITOR_QUERY} variables={{ id }}>
       {({ loading, error, data }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
@@ -44,5 +43,7 @@ const RoutineEditorPage = ({ match }) => {
     </Query>
   );
 };
+
+export { ROUTINE_EDITOR_QUERY };
 
 export default withRouter(RoutineEditorPage);

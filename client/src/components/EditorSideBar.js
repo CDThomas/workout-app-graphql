@@ -8,6 +8,7 @@ import CreateExerciseModal from "./CreateExerciseModal";
 import List from "./List";
 import { Title } from "./typography";
 import { Mutation } from "react-apollo";
+import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
 
 const Button = styled("button")`
   font-size: 14px;
@@ -41,6 +42,7 @@ class EditorSideBar extends Component {
     const { data, match } = this.props;
     const { exercises } = data;
     const routineId = match.params.id;
+
     return (
       <SideBar>
         <SideBar.Header>
@@ -69,31 +71,17 @@ class EditorSideBar extends Component {
                   }
                 `}
                 update={(cache, { data: { createRoutineSet } }) => {
-                  // TODO: how to use shared query?
-                  const query = gql`
-                    {
-                      routine(id: $id) {
-                        name
-                        sets {
-                          id
-                          exercise {
-                            id
-                            name
-                          }
-                        }
-                      }
-                    }
-                  `;
+                  // TODO: is there a better way to share queries?
 
                   const data = cache.readQuery({
-                    query,
+                    query: ROUTINE_EDITOR_QUERY,
                     variables: { id: routineId }
                   });
 
                   data.routine.sets = [...data.routine.sets, createRoutineSet];
 
                   cache.writeQuery({
-                    query,
+                    query: ROUTINE_EDITOR_QUERY,
                     variables: { id: routineId },
                     data
                   });
