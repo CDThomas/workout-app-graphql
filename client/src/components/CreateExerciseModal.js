@@ -22,6 +22,13 @@ import { Mutation } from "react-apollo";
 //   onExerciseCreated: PropTypes.func.isRequired
 // };
 
+const createIdGenerator = name => {
+  let count = 0;
+  return () => `${name}_${++count}`;
+};
+
+const generateTempId = createIdGenerator("CreateExerciseModal_CreateExercise");
+
 class CreateExerciseModal extends Component {
   constructor(props) {
     super(props);
@@ -174,7 +181,7 @@ class CreateExerciseModal extends Component {
             {" "}
             <Mutation
               mutation={gql`
-                mutation CreateExerciseMutation($name: String!) {
+                mutation CreateExercise($name: String!) {
                   createExercise(name: $name) {
                     __typename
                     id
@@ -183,6 +190,14 @@ class CreateExerciseModal extends Component {
                 }
               `}
               onCompleted={this.handleRequestClose}
+              optimisticResponse={{
+                __typename: "Mutation",
+                createExercise: {
+                  __typename: "Exercise",
+                  id: generateTempId(),
+                  name: this.state.name
+                }
+              }}
               update={(cache, { data: { createExercise } }) => {
                 // TOOD: Extract into shared query. How does this work with fragments?
                 const query = gql`

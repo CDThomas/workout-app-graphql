@@ -47,6 +47,13 @@ const SetCard = ({ set, routineId }) => {
               }
             }
           `}
+          optimisticResponse={{
+            __typename: "Mutation",
+            deleteRoutineSet: {
+              __typename: "RoutineSet",
+              id
+            }
+          }}
           update={(cache, { data: { deleteRoutineSet: deletedSet } }) => {
             // TODO: is there a better way to share queries?
 

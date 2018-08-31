@@ -20,6 +20,13 @@ const Button = styled("button")`
   cursor: pointer;
 `;
 
+const createIdGenerator = name => {
+  let count = 0;
+  return () => `${name}_${++count}`;
+};
+
+const generateTempId = createIdGenerator("EditorSideBar_CreateRoutineSet");
+
 class EditorSideBar extends Component {
   state = {
     isModalOpen: false
@@ -70,6 +77,18 @@ class EditorSideBar extends Component {
                     }
                   }
                 `}
+                optimisticResponse={{
+                  __typename: "Mutation",
+                  createRoutineSet: {
+                    __typename: "RoutineSet",
+                    id: generateTempId(),
+                    exercise: {
+                      __typename: "Exercise",
+                      id: exercise.id,
+                      name: exercise.name
+                    }
+                  }
+                }}
                 update={(cache, { data: { createRoutineSet } }) => {
                   // TODO: is there a better way to share queries?
 
