@@ -9,6 +9,7 @@ import Button from "./Button";
 import { Title } from "./typography";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import clientUUID from "../utils/clientUUID";
 
 // import { capitalize } from "lodash";
 
@@ -21,13 +22,6 @@ import { Mutation } from "react-apollo";
 //   onRequestClose: PropTypes.func.isRequired,
 //   onExerciseCreated: PropTypes.func.isRequired
 // };
-
-const createIdGenerator = name => {
-  let count = 0;
-  return () => `${name}_${++count}`;
-};
-
-const generateTempId = createIdGenerator("CreateExerciseModal_CreateExercise");
 
 class CreateExerciseModal extends Component {
   constructor(props) {
@@ -194,7 +188,7 @@ class CreateExerciseModal extends Component {
                 __typename: "Mutation",
                 createExercise: {
                   __typename: "Exercise",
-                  id: generateTempId(),
+                  id: clientUUID(),
                   name: this.state.name
                 }
               }}

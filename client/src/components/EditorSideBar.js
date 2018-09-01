@@ -9,6 +9,7 @@ import List from "./List";
 import { Title } from "./typography";
 import { Mutation } from "react-apollo";
 import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
+import clientUUID from "../utils/clientUUID";
 
 const Button = styled("button")`
   font-size: 14px;
@@ -19,13 +20,6 @@ const Button = styled("button")`
   text-decoration: underline;
   cursor: pointer;
 `;
-
-const createIdGenerator = name => {
-  let count = 0;
-  return () => `${name}_${++count}`;
-};
-
-const generateTempId = createIdGenerator("EditorSideBar_CreateRoutineSet");
 
 class EditorSideBar extends Component {
   state = {
@@ -81,7 +75,7 @@ class EditorSideBar extends Component {
                   __typename: "Mutation",
                   createRoutineSet: {
                     __typename: "RoutineSet",
-                    id: generateTempId(),
+                    id: clientUUID(),
                     exercise: {
                       __typename: "Exercise",
                       id: exercise.id,
