@@ -1,7 +1,7 @@
-# import User, Routine, Exercise, RoutineSet from "./generated/prisma.graphql"
+# import User, Routine, Exercise, ExerciseFilterInput, RoutineSet from "./generated/prisma.graphql"
 
 type Query {
-  exercises: [Exercise!]!
+  exercises(filter: ExerciseFilterInput): [Exercise!]!
   routine(id: ID!): Routine
   routines: [Routine!]!
   routinesByUser(userId: ID!): [Routine!]!
@@ -12,6 +12,10 @@ type Mutation {
   createExercise(name: String!): Exercise
   createRoutineSet(input: CreateRoutineSetInput!): RoutineSet
   deleteRoutineSet(id: ID!): RoutineSet
+}
+
+input ExerciseFilterInput {
+  name: String
 }
 
 input CreateRoutineSetInput {

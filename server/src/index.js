@@ -6,7 +6,27 @@ const path = require("path");
 const resolvers = {
   Query: {
     exercises(parent, args, context, info) {
-      return context.db.query.exercises(null, info);
+      const capitalize = str => str.charAt(0).toUpperCase() + str.substr(1);
+      const capitalizeWords = phrase =>
+        phrase
+          .split(" ")
+          .map(capitalize)
+          .join(" ");
+
+      const nameFilter =
+        args.filter && args.filter.name
+          ? capitalizeWords(args.filter.name)
+          : null;
+
+      const queryArgs = nameFilter
+        ? {
+            where: {
+              OR: [{ name_contains: nameFilter }, { name_contains: nameFilter }]
+            }
+          }
+        : { orderBy: "name_ASC" };
+
+      return context.db.query.exercises({ ...queryArgs, first: 15 }, info);
     },
     routine(parent, args, context, info) {
       return context.db.query.routine({ where: { id: args.id } }, info);
