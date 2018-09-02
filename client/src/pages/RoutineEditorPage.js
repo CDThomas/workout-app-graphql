@@ -15,7 +15,10 @@ const Content = styled("div")`
 `;
 
 const ROUTINE_EDITOR_QUERY = gql`
-  query RoutineEditorQuery($id: ID!) {
+  query RoutineEditorQuery(
+    $routineId: ID!
+    $exerciseFilter: ExerciseFilterInput
+  ) {
     ...EditorMain_data
     ...EditorSideBar_data
   }
@@ -24,9 +27,9 @@ const ROUTINE_EDITOR_QUERY = gql`
 `;
 
 const RoutineEditorPage = ({ match }) => {
-  const id = match.params.id;
+  const routineId = match.params.id;
   return (
-    <Query query={ROUTINE_EDITOR_QUERY} variables={{ id }}>
+    <Query query={ROUTINE_EDITOR_QUERY} variables={{ routineId }}>
       {({ loading, error, data }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
