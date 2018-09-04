@@ -6,32 +6,7 @@ const path = require("path");
 const resolvers = {
   Query: {
     exercises(parent, args, context, info) {
-      const capitalize = str => str.charAt(0).toUpperCase() + str.substr(1);
-      const capitalizeWords = phrase =>
-        phrase
-          .split(" ")
-          .map(capitalize)
-          .join(" ");
-
-      const nameFilter = args.filter && args.filter.name;
-
-      // If a filter is given, roughly use a case-insensitive search by name.
-      // If no filter is given, just return in alphabetical order.
-      // Limit to 15 records in both cases.
-      // TODO: Try out something like Algolia for search
-      const queryArgs =
-        args.filter && args.filter.name
-          ? {
-              where: {
-                OR: [
-                  { name_contains: nameFilter },
-                  { name_contains: capitalizeWords(nameFilter) }
-                ]
-              }
-            }
-          : { orderBy: "name_ASC" };
-
-      return context.db.query.exercises({ ...queryArgs, first: 15 }, info);
+      return context.db.query.exercises(null, info);
     },
     routine(parent, args, context, info) {
       return context.db.query.routine({ where: { id: args.id } }, info);

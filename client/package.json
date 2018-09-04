@@ -16,8 +16,7 @@
     "react-icons": "^3.0.5",
     "react-modal": "^3.5.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4",
-    "uuid": "^3.3.2"
+    "react-scripts": "1.1.4"
   },
   "scripts": {
     "start": "PORT=4001 react-scripts start",

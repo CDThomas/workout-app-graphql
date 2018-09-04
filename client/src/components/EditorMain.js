@@ -59,7 +59,7 @@ const SetCard = ({ set, routineId }) => {
 
             const data = cache.readQuery({
               query: ROUTINE_EDITOR_QUERY,
-              variables: { routineId }
+              variables: { id: routineId }
             });
 
             data.routine.sets = data.routine.sets.filter(
@@ -68,7 +68,7 @@ const SetCard = ({ set, routineId }) => {
 
             cache.writeQuery({
               query: ROUTINE_EDITOR_QUERY,
-              variables: { routineId },
+              variables: { id: routineId },
               data
             });
           }}
@@ -116,7 +116,7 @@ const EditorMain = ({ data }) => {
 export default withFragment(EditorMain, {
   data: gql`
     fragment EditorMain_data on Query {
-      routine(id: $routineId) {
+      routine(id: $id) {
         id
         name
         sets {
