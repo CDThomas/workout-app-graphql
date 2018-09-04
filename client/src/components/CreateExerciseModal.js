@@ -195,7 +195,7 @@ class CreateExerciseModal extends Component {
                 }
               }}
               update={(cache, { data: { createExercise } }) => {
-                // This works but it sucks. This component shouldn't know
+                // XXX: This works but it sucks. This component shouldn't know
                 // about the routine id. Maybe the parent can provide a cach updater
                 // func? Maybe this whole updater should be passed down from the
                 // parent that knows about its own data.

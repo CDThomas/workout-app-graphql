@@ -69,7 +69,7 @@ class EditorSideBar extends Component {
           <ApolloConsumer>
             {client => {
               const updateExercises = async evt => {
-                // This works but kinda sucks. There's a lot of knowledge of different
+                // XXX: This works but kinda sucks. There's a lot of knowledge of different
                 // things here. Doing this to prevent rerendering the whole page
                 // when the exerciseFilter (search input) changes. Giving the
                 // sidebar its own Query component could be cleaner/simpler.
