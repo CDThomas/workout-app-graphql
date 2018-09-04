@@ -8,6 +8,7 @@
     "graphql": "^0.13.2",
     "graphql-anywhere": "^4.1.17",
     "hoist-non-react-statics": "^3.0.1",
+    "lodash": "^4.17.10",
     "normalize.css": "^8.0.0",
     "react": "^16.4.2",
     "react-apollo": "^2.1.11",

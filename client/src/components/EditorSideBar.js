@@ -7,7 +7,7 @@ import SideBar from "./SideBar";
 import SearchBar from "./SearchBar";
 import CreateExerciseModal from "./CreateExerciseModal";
 import List from "./List";
-import { Title } from "./typography";
+import { Title, Text } from "./typography";
 import { Mutation, ApolloConsumer } from "react-apollo";
 import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
 import clientUUID from "../utils/clientUUID";
@@ -21,11 +21,6 @@ const Button = styled("button")`
   outline: none;
   text-decoration: underline;
   cursor: pointer;
-`;
-
-const Text = styled("span")`
-  font-size: 14px;
-  font-weight: 300;
 `;
 
 const fragment = {
