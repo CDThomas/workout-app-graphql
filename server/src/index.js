@@ -13,18 +13,23 @@ const resolvers = {
           .map(capitalize)
           .join(" ");
 
-      const nameFilter =
-        args.filter && args.filter.name
-          ? capitalizeWords(args.filter.name)
-          : null;
+      const nameFilter = args.filter && args.filter.name;
 
-      const queryArgs = nameFilter
-        ? {
-            where: {
-              OR: [{ name_contains: nameFilter }, { name_contains: nameFilter }]
+      // If a filter is given, roughly use a case-insensitive search by name.
+      // If no filter is given, just return in alphabetical order.
+      // Limit to 15 records in both cases.
+      // TODO: Try out something like Algolia for search
+      const queryArgs =
+        args.filter && args.filter.name
+          ? {
+              where: {
+                OR: [
+                  { name_contains: nameFilter },
+                  { name_contains: capitalizeWords(nameFilter) }
+                ]
+              }
             }
-          }
-        : { orderBy: "name_ASC" };
+          : { orderBy: "name_ASC" };
 
       return context.db.query.exercises({ ...queryArgs, first: 15 }, info);
     },
