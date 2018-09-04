@@ -9,6 +9,9 @@ import Button from "./Button";
 import { Title } from "./typography";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import clientUUID from "../utils/clientUUID";
+import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
+import { withRouter } from "react-router-dom";
 
 // import { capitalize } from "lodash";
 
@@ -21,13 +24,6 @@ import { Mutation } from "react-apollo";
 //   onRequestClose: PropTypes.func.isRequired,
 //   onExerciseCreated: PropTypes.func.isRequired
 // };
-
-const createIdGenerator = name => {
-  let count = 0;
-  return () => `${name}_${++count}`;
-};
-
-const generateTempId = createIdGenerator("CreateExerciseModal_CreateExercise");
 
 class CreateExerciseModal extends Component {
   constructor(props) {
@@ -194,28 +190,28 @@ class CreateExerciseModal extends Component {
                 __typename: "Mutation",
                 createExercise: {
                   __typename: "Exercise",
-                  id: generateTempId(),
+                  id: clientUUID(),
                   name: this.state.name
                 }
               }}
               update={(cache, { data: { createExercise } }) => {
-                // TOOD: Extract into shared query. How does this work with fragments?
-                const query = gql`
-                  {
-                    exercises {
-                      id
-                      name
-                    }
-                  }
-                `;
+                // XXX: This works but it sucks. This component shouldn't know
+                // about the routine id. Maybe the parent can provide a cach updater
+                // func? Maybe this whole updater should be passed down from the
+                // parent that knows about its own data.
+                const routineId = this.props.match.params.id;
 
-                const { exercises } = cache.readQuery({
-                  query
+                const data = cache.readQuery({
+                  query: ROUTINE_EDITOR_QUERY,
+                  variables: { routineId }
                 });
 
+                data.exercises = [createExercise, ...data.exercises];
+
                 cache.writeQuery({
-                  query,
-                  data: { exercises: [createExercise, ...exercises] }
+                  query: ROUTINE_EDITOR_QUERY,
+                  variables: { routineId },
+                  data
                 });
               }}
             >
@@ -231,4 +227,4 @@ class CreateExerciseModal extends Component {
 }
 // CreateExerciseModal.propTypes = propTypes;
 
-export default CreateExerciseModal;
+export default withRouter(CreateExerciseModal);

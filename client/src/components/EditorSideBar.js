@@ -4,15 +4,18 @@ import gql from "graphql-tag";
 import { withRouter } from "react-router";
 import styled from "react-emotion";
 import SideBar from "./SideBar";
+import SearchBar from "./SearchBar";
 import CreateExerciseModal from "./CreateExerciseModal";
 import List from "./List";
 import { Title } from "./typography";
-import { Mutation } from "react-apollo";
+import { Mutation, ApolloConsumer } from "react-apollo";
 import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
+import clientUUID from "../utils/clientUUID";
 
 const Button = styled("button")`
   font-size: 14px;
   font-weight: 400;
+  padding-bottom: 0;
   color: #005eaf;
   border: none;
   outline: none;
@@ -20,12 +23,21 @@ const Button = styled("button")`
   cursor: pointer;
 `;
 
-const createIdGenerator = name => {
-  let count = 0;
-  return () => `${name}_${++count}`;
-};
+const Text = styled("span")`
+  font-size: 14px;
+  font-weight: 300;
+`;
 
-const generateTempId = createIdGenerator("EditorSideBar_CreateRoutineSet");
+const fragment = {
+  data: gql`
+    fragment EditorSideBar_data on Query {
+      exercises(filter: $exerciseFilter) {
+        id
+        name
+      }
+    }
+  `
+};
 
 class EditorSideBar extends Component {
   state = {
@@ -54,7 +66,57 @@ class EditorSideBar extends Component {
       <SideBar>
         <SideBar.Header>
           <Title weight="medium">Exercises</Title>
-          <Button onClick={this.handleCreateExerciseClick}>create one</Button>
+          <ApolloConsumer>
+            {client => {
+              const updateExercises = async evt => {
+                // XXX: This works but kinda sucks. There's a lot of knowledge of different
+                // things here. Doing this to prevent rerendering the whole page
+                // when the exerciseFilter (search input) changes. Giving the
+                // sidebar its own Query component could be cleaner/simpler.
+                // Or the parent could at least pass down a func for updating
+                // exercises.
+                const searchStr = evt.target.value;
+                const exerciseFilter =
+                  searchStr && searchStr.length > 0
+                    ? { name: searchStr.trim() }
+                    : null;
+
+                const result = await client.query({
+                  query: gql`
+                    query ExerciseSearch($exerciseFilter: ExerciseFilterInput) {
+                      ...EditorSideBar_data
+                    }
+                    ${fragment.data}
+                  `,
+                  variables: { exerciseFilter }
+                });
+
+                const data = client.readQuery({
+                  query: ROUTINE_EDITOR_QUERY,
+                  variables: { routineId }
+                });
+
+                data.exercises = result.data.exercises;
+
+                client.writeQuery({
+                  query: ROUTINE_EDITOR_QUERY,
+                  variables: { routineId },
+                  data
+                });
+              };
+
+              return (
+                <SearchBar
+                  onChange={updateExercises}
+                  placeholder="Find an exercise..."
+                />
+              );
+            }}
+          </ApolloConsumer>
+          <Text>
+            or
+            <Button onClick={this.handleCreateExerciseClick}>create one</Button>
+          </Text>
           <CreateExerciseModal
             isOpen={isModalOpen}
             onRequestClose={this.handleCloseModal}
@@ -81,7 +143,7 @@ class EditorSideBar extends Component {
                   __typename: "Mutation",
                   createRoutineSet: {
                     __typename: "RoutineSet",
-                    id: generateTempId(),
+                    id: clientUUID(),
                     exercise: {
                       __typename: "Exercise",
                       id: exercise.id,
@@ -94,14 +156,14 @@ class EditorSideBar extends Component {
 
                   const data = cache.readQuery({
                     query: ROUTINE_EDITOR_QUERY,
-                    variables: { id: routineId }
+                    variables: { routineId }
                   });
 
                   data.routine.sets = [...data.routine.sets, createRoutineSet];
 
                   cache.writeQuery({
                     query: ROUTINE_EDITOR_QUERY,
-                    variables: { id: routineId },
+                    variables: { routineId },
                     data
                   });
                 }}
@@ -128,15 +190,4 @@ class EditorSideBar extends Component {
   }
 }
 
-export default withRouter(
-  withFragment(EditorSideBar, {
-    data: gql`
-      fragment EditorSideBar_data on Query {
-        exercises {
-          id
-          name
-        }
-      }
-    `
-  })
-);
+export default withRouter(withFragment(EditorSideBar, fragment));
