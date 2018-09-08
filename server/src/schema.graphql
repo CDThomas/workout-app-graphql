@@ -11,6 +11,7 @@ type Mutation {
   createUser(name: String!): User
   createExercise(name: String!): Exercise
   createRoutineSet(input: CreateRoutineSetInput!): RoutineSet
+  updateRoutine(input: UpdateRoutineInput!): Routine
   deleteRoutineSet(id: ID!): RoutineSet
 }
 
@@ -21,4 +22,9 @@ input ExerciseFilterInput {
 input CreateRoutineSetInput {
   routineId: ID!
   exerciseId: ID!
+}
+
+input UpdateRoutineInput {
+  id: ID!
+  name: String
 }

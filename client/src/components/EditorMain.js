@@ -2,7 +2,8 @@ import React, { Fragment } from "react";
 import gql from "graphql-tag";
 import withFragment from "../utils/withFragment";
 import styled from "react-emotion";
-import { Header, Title } from "../components/typography";
+import { Title } from "../components/typography";
+import RoutineEditorHeader from "./RoutineEditorHeader";
 import Button from "./Button";
 import { Mutation } from "react-apollo";
 import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
@@ -107,7 +108,7 @@ const EditorMain = ({ data }) => {
 
   return (
     <Fragment>
-      <Header>{routine.name}</Header>
+      <RoutineEditorHeader routine={routine} />
       <SetList sets={routine.sets} routineId={routine.id} />
     </Fragment>
   );

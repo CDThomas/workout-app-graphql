@@ -21,4 +21,13 @@ const Title = styled("span")(({ weight = "light" }) => {
   };
 });
 
-export { Header, Title };
+const Text = styled("span")`
+  font-size: 14px;
+  font-weight: 300;
+`;
+
+const ErrorText = styled(Text)`
+  color: red;
+`;
+
+export { ErrorText, Header, Text, Title };
