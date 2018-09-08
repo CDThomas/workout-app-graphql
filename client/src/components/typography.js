@@ -26,4 +26,8 @@ const Text = styled("span")`
   font-weight: 300;
 `;
 
-export { Header, Text, Title };
+const ErrorText = styled(Text)`
+  color: red;
+`;
+
+export { ErrorText, Header, Text, Title };

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import styled from "react-emotion";
 
 const Input = styled("input")`
@@ -14,28 +14,8 @@ const Input = styled("input")`
   }
 `;
 
-// TODO: Try moving this up a level and using props === state to determine if
-//       changes have persisted.
-class RoutineNameInput extends Component {
-  state = {
-    name: this.props.name
-  };
-
-  handleChangeRoutineName = evt => {
-    const { onChange } = this.props;
-    const newName = evt.target.value;
-
-    onChange && onChange(newName);
-    this.setState({ name: newName });
-  };
-
-  render() {
-    const { name } = this.state;
-
-    return (
-      <Input type="text" onChange={this.handleChangeRoutineName} value={name} />
-    );
-  }
-}
+const RoutineNameInput = ({ onChange, value }) => {
+  return <Input type="text" onChange={onChange} value={value} />;
+};
 
 export default RoutineNameInput;

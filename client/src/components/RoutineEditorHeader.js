@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import RoutineNameInput from "./RoutineNameInput";
-import { Text } from "./typography";
+import { Text, ErrorText } from "./typography";
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
 import debounce from "lodash/debounce";
@@ -14,18 +14,50 @@ const Header = styled("header")`
 
 class RoutineEditorHeader extends Component {
   state = {
-    loading: false
+    error: null,
+    name: this.props.routine.name
+  };
+
+  handleNameChange = (evt, updateRoutineMutation) => {
+    const newName = evt.target.value;
+    const { id } = this.props.routine;
+
+    this.setState({ name: newName });
+
+    if (!newName) {
+      this.doMutation.cancel();
+      this.state.error = "Routine name can't be blank";
+      return;
+    }
+
+    this.setState({ error: null });
+    this.doMutation(updateRoutineMutation, {
+      variables: { input: { id, name: newName } }
+    });
   };
 
   doMutation = debounce((mutation, opts) => {
-    return mutation(opts).then(() => this.setState({ loading: false }));
+    return mutation(opts);
   }, 1000);
 
+  hasPersisted() {
+    return this.props.routine.name === this.state.name;
+  }
+
+  renderHelperText() {
+    const { error } = this.state;
+
+    if (error) {
+      return <ErrorText>{error}</ErrorText>;
+    }
+
+    return (
+      <Text>{this.hasPersisted() ? "All changes saved." : "Saving..."}</Text>
+    );
+  }
+
   render() {
-    const {
-      routine: { name, id }
-    } = this.props;
-    const { loading } = this.state;
+    const { name } = this.state;
 
     return (
       <Header>
@@ -41,29 +73,14 @@ class RoutineEditorHeader extends Component {
         >
           {updateRoutine => {
             return (
-              <Fragment>
-                <RoutineNameInput
-                  name={name}
-                  onChange={newName => {
-                    this.setState({ loading: true });
-
-                    this.doMutation(updateRoutine, {
-                      variables: { input: { id, name: newName } }
-                    });
-                  }}
-                />
-                {/*
-                  This check is naive, but works for now. This could be extended
-                  to use apollo-link-state to track if there are pending changes
-                  at the top level of the routine, or any of the sets.
-                  TODO: try using apollo link state to track pending changes here,
-                  pending deletions, or pending set/rep count changes.
-                */}
-                <Text>{loading ? "Saving..." : "All changes saved."}</Text>
-              </Fragment>
+              <RoutineNameInput
+                value={name}
+                onChange={evt => this.handleNameChange(evt, updateRoutine)}
+              />
             );
           }}
         </Mutation>
+        {this.renderHelperText()}
       </Header>
     );
   }
