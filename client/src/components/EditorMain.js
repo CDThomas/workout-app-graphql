@@ -21,25 +21,27 @@ const BottomRow = styled("div")`
   margin-top: 10px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
 `;
 
-// const MainMuscleWorked = styled("span")`
-//   font-weight: 400;
-//   text-transform: uppercase;
-//   font-size: 14px;
-//   letter-spacing: 0.3px;
-//   color: #999;
-// `;
+const CapsText = styled("span")`
+  font-weight: 400;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.3px;
+  color: #999;
+`;
 
 const SetCard = ({ set, routineId }) => {
-  const { id, exercise } = set;
+  const { id, setCount, repCount, exercise } = set;
 
   return (
     <Card>
       <Title>{exercise.name}</Title>
       <BottomRow>
-        {/* <MainMuscleWorked>Chest</MainMuscleWorked> */}
+        <CapsText>
+          {setCount} sets, {repCount} reps
+        </CapsText>
         <Mutation
           mutation={gql`
             mutation DeleteRoutineSet($id: ID!) {
@@ -122,6 +124,8 @@ export default withFragment(EditorMain, {
         name
         sets {
           id
+          setCount
+          repCount
           exercise {
             id
             name
