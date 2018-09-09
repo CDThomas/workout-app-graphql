@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import RoutineNameInput from "./RoutineNameInput";
 import { Text, ErrorText } from "./typography";
 import { Mutation } from "react-apollo";
+import withFragment from "../utils/withFragment";
 import gql from "graphql-tag";
 import debounce from "lodash/debounce";
 import styled from "react-emotion";
@@ -86,4 +87,11 @@ class RoutineEditorHeader extends Component {
   }
 }
 
-export default RoutineEditorHeader;
+export default withFragment(RoutineEditorHeader, {
+  routine: gql`
+    fragment RoutineEditorHeader_routine on Routine {
+      id
+      name
+    }
+  `
+});
