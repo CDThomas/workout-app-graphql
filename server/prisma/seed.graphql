@@ -1,0 +1,34 @@
+mutation SeedData {
+  createRoutine(
+    data: {
+      name: "Upper A"
+      creator: { create: { name: "Drew" } }
+      sets: {
+        create: [
+          {
+            setCount: 3
+            repCount: 8
+            exercise: { create: { name: "Bench Press" } }
+          }
+          {
+            setCount: 3
+            repCount: 8
+            exercise: { create: { name: "Seated Cable Row" } }
+          }
+          {
+            setCount: 3
+            repCount: 8
+            exercise: { create: { name: "Incline Dumbell Bench Press" } }
+          }
+          {
+            setCount: 3
+            repCount: 8
+            exercise: { create: { name: "Lat Pulldown" } }
+          }
+        ]
+      }
+    }
+  ) {
+    id
+  }
+}

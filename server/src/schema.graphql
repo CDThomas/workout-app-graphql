@@ -22,6 +22,8 @@ input ExerciseFilterInput {
 input CreateRoutineSetInput {
   routineId: ID!
   exerciseId: ID!
+  setCount: Int
+  repCount: Int
 }
 
 input UpdateRoutineInput {

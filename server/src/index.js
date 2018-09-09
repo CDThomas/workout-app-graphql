@@ -61,14 +61,16 @@ const resolvers = {
     },
     createRoutineSet(parent, args, context, info) {
       const {
-        input: { routineId, exerciseId }
+        input: { routineId, exerciseId, setCount, repCount }
       } = args;
 
       return context.db.mutation.createRoutineSet(
         {
           data: {
             routine: { connect: { id: routineId } },
-            exercise: { connect: { id: exerciseId } }
+            exercise: { connect: { id: exerciseId } },
+            setCount: setCount || 0,
+            repCount: repCount || 0
           }
         },
         info

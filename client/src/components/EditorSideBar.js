@@ -12,6 +12,9 @@ import { Mutation, ApolloConsumer } from "react-apollo";
 import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
 import clientUUID from "../utils/clientUUID";
 
+const DEFAULT_SET_COUNT = 3;
+const DEFAULT_REP_COUNT = 8;
+
 const Button = styled("button")`
   font-size: 14px;
   font-weight: 400;
@@ -127,9 +130,14 @@ class EditorSideBar extends Component {
                   mutation CreateRoutineSet($input: CreateRoutineSetInput!) {
                     createRoutineSet(input: $input) {
                       id
+                      setCount
+                      repCount
                       exercise {
                         id
                         name
+                      }
+                      routine {
+                        id
                       }
                     }
                   }
@@ -139,15 +147,23 @@ class EditorSideBar extends Component {
                   createRoutineSet: {
                     __typename: "RoutineSet",
                     id: clientUUID(),
+                    setCount: DEFAULT_SET_COUNT,
+                    repCount: DEFAULT_REP_COUNT,
                     exercise: {
                       __typename: "Exercise",
                       id: exercise.id,
                       name: exercise.name
+                    },
+                    routine: {
+                      __typename: "Routine",
+                      id: routineId
                     }
                   }
                 }}
                 update={(cache, { data: { createRoutineSet } }) => {
-                  // TODO: is there a better way to share queries?
+                  // TODO: Find a better way to share fragments with mutations.
+                  //       This includes the query for the output of the mutation
+                  //       an also the query to update the cache.
 
                   const data = cache.readQuery({
                     query: ROUTINE_EDITOR_QUERY,
@@ -168,7 +184,12 @@ class EditorSideBar extends Component {
                     onClick={() =>
                       createRoutineSet({
                         variables: {
-                          input: { routineId, exerciseId: exercise.id }
+                          input: {
+                            routineId,
+                            exerciseId: exercise.id,
+                            setCount: DEFAULT_SET_COUNT,
+                            repCount: DEFAULT_REP_COUNT
+                          }
                         }
                       })
                     }
