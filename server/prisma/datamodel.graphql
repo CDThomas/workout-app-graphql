@@ -15,6 +15,7 @@ type RoutineSet {
   routine: Routine!
   exercise: Exercise!
   setCount: Int! @default(value: 0)
+  repCount: Int! @default(value: 0)
 }
 
 type Exercise {
