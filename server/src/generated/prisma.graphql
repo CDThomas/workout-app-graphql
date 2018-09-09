@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue Aug 21 2018 20:04:14 GMT+1000 (Australian Eastern Standard Time)
+# timestamp: Sun Sep 09 2018 15:14:27 GMT+1000 (Australian Eastern Standard Time)
 
 type AggregateExercise {
   count: Int!
@@ -370,6 +370,7 @@ type RoutineSet implements Node {
   routine(where: RoutineWhereInput): Routine!
   exercise(where: ExerciseWhereInput): Exercise!
   setCount: Int!
+  repCount: Int!
 }
 
 """A connection to a list of items."""
@@ -384,6 +385,7 @@ type RoutineSetConnection {
 
 input RoutineSetCreateInput {
   setCount: Int
+  repCount: Int
   routine: RoutineCreateOneWithoutSetsInput!
   exercise: ExerciseCreateOneInput!
 }
@@ -395,6 +397,7 @@ input RoutineSetCreateManyWithoutRoutineInput {
 
 input RoutineSetCreateWithoutRoutineInput {
   setCount: Int
+  repCount: Int
   exercise: ExerciseCreateOneInput!
 }
 
@@ -412,6 +415,8 @@ enum RoutineSetOrderByInput {
   id_DESC
   setCount_ASC
   setCount_DESC
+  repCount_ASC
+  repCount_DESC
   updatedAt_ASC
   updatedAt_DESC
   createdAt_ASC
@@ -421,6 +426,7 @@ enum RoutineSetOrderByInput {
 type RoutineSetPreviousValues {
   id: ID!
   setCount: Int!
+  repCount: Int!
 }
 
 type RoutineSetSubscriptionPayload {
@@ -464,6 +470,7 @@ input RoutineSetSubscriptionWhereInput {
 
 input RoutineSetUpdateInput {
   setCount: Int
+  repCount: Int
   routine: RoutineUpdateOneWithoutSetsInput
   exercise: ExerciseUpdateOneInput
 }
@@ -479,6 +486,7 @@ input RoutineSetUpdateManyWithoutRoutineInput {
 
 input RoutineSetUpdateWithoutRoutineDataInput {
   setCount: Int
+  repCount: Int
   exercise: ExerciseUpdateOneInput
 }
 
@@ -564,6 +572,28 @@ input RoutineSetWhereInput {
 
   """All values greater than or equal the given value."""
   setCount_gte: Int
+  repCount: Int
+
+  """All values that are not equal to given value."""
+  repCount_not: Int
+
+  """All values that are contained in given list."""
+  repCount_in: [Int!]
+
+  """All values that are not contained in given list."""
+  repCount_not_in: [Int!]
+
+  """All values less than the given value."""
+  repCount_lt: Int
+
+  """All values less than or equal the given value."""
+  repCount_lte: Int
+
+  """All values greater than the given value."""
+  repCount_gt: Int
+
+  """All values greater than or equal the given value."""
+  repCount_gte: Int
   routine: RoutineWhereInput
   exercise: ExerciseWhereInput
 }
