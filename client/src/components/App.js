@@ -11,7 +11,29 @@ import { RoutineListPage, RoutineEditorPage } from "../pages";
 import HeaderNav from "./HeaderNav";
 import styled from "react-emotion";
 
-const client = new ApolloClient({});
+const client = new ApolloClient({
+  clientState: {
+    resolvers: {
+      RoutineSet: {
+        pendingChanges: () => false
+      },
+      Mutation: {
+        updatePendingChange: (
+          _,
+          { pendingChanges, routineSetId },
+          { cache }
+        ) => {
+          cache.writeData({
+            id: `RoutineSet:${routineSetId}`,
+            data: { pendingChanges }
+          });
+
+          return { updatePendingChange: { pendingChanges, routineSetId } };
+        }
+      }
+    }
+  }
+});
 
 const Main = styled("main")`
   position: relative;

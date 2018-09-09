@@ -27,17 +27,31 @@ const Label = styled("label")`
   padding: 0 5px;
 `;
 
+const UPDATE_PENDING_CHANGES = gql`
+  mutation UpdatePendingChange($pendingChanges: Boolean!, $routineSetId: ID!) {
+    updatePendingChange(
+      pendingChanges: $pendingChanges
+      routineSetId: $routineSetId
+    ) @client
+  }
+`;
+
 class RoutineSetEditableFields extends Component {
   state = {
     setCount: this.props.setCount,
     repCount: this.props.repCount
   };
 
-  doMutation = debounce((mutation, opts) => {
-    return mutation(opts);
+  doMutation = debounce((mutation, opts, id, client) => {
+    return mutation(opts).then(() => {
+      client.mutate({
+        mutation: UPDATE_PENDING_CHANGES,
+        variables: { pendingChanges: false, routineSetId: id }
+      });
+    });
   }, 1000);
 
-  onChange = (evt, updateRoutineSetMutation) => {
+  onChange = async (evt, updateRoutineSetMutation, client) => {
     const { name, value } = evt.target;
     const { id } = this.props;
 
@@ -58,13 +72,23 @@ class RoutineSetEditableFields extends Component {
       return;
     }
 
+    await client.mutate({
+      mutation: UPDATE_PENDING_CHANGES,
+      variables: { pendingChanges: true, routineSetId: id }
+    });
+
     const fields = {};
     fields[name] = valueAsInt;
     fields[otherFieldName] = otherFieldAsInt;
 
-    this.doMutation(updateRoutineSetMutation, {
-      variables: { input: { id, ...fields } }
-    });
+    this.doMutation(
+      updateRoutineSetMutation,
+      {
+        variables: { input: { id, ...fields } }
+      },
+      id,
+      client
+    );
   };
 
   onSubmit = evt => {
@@ -86,21 +110,21 @@ class RoutineSetEditableFields extends Component {
           }
         `}
       >
-        {updateRoutineSet => {
+        {(updateRoutineSet, { client }) => {
           return (
             <form onSubmit={this.onSubmit}>
               <Input
                 type="text"
                 name="setCount"
                 value={setCount}
-                onChange={evt => this.onChange(evt, updateRoutineSet)}
+                onChange={evt => this.onChange(evt, updateRoutineSet, client)}
               />
               <Label htmlFor="setCount">sets, </Label>
               <Input
                 type="text"
                 name="repCount"
                 value={repCount}
-                onChange={evt => this.onChange(evt, updateRoutineSet)}
+                onChange={evt => this.onChange(evt, updateRoutineSet, client)}
               />
               <Label htmlFor="repCount">reps</Label>
             </form>
