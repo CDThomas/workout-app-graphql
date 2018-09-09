@@ -15,7 +15,7 @@ const SideBar = styled("div")`
 const Header = styled("header")`
   padding: 15px 0;
   margin: 0 20px;
-  height: 80px;
+  height: 60px;
   box-sizing: border-box;
   border-bottom: 1px solid #e8e8e8;
   display: flex;
@@ -25,7 +25,7 @@ const Header = styled("header")`
 
 const Content = styled("div")`
   /* Subtract sidebar header height to for proper scrolling */
-  height: calc(100% - 80px);
+  height: calc(100% - 60px);
   overflow-y: scroll;
 `;
 
