@@ -12,6 +12,7 @@ type Mutation {
   createExercise(name: String!): Exercise
   createRoutineSet(input: CreateRoutineSetInput!): RoutineSet
   updateRoutine(input: UpdateRoutineInput!): Routine
+  updateRoutineSet(input: UpdateRoutineSetInput!): RoutineSet
   deleteRoutineSet(id: ID!): RoutineSet
 }
 
@@ -29,4 +30,10 @@ input CreateRoutineSetInput {
 input UpdateRoutineInput {
   id: ID!
   name: String
+}
+
+input UpdateRoutineSetInput {
+  id: ID!
+  setCount: Int
+  repCount: Int
 }
