@@ -26,7 +26,7 @@ class RoutineEditorHeader extends Component {
 
     if (!newName) {
       this.doMutation.cancel();
-      this.state.error = "Routine name can't be blank";
+      this.setState({ error: "Routine name can't be blank" });
       return;
     }
 
