@@ -15,20 +15,20 @@ const client = new ApolloClient({
   clientState: {
     resolvers: {
       RoutineSet: {
-        pendingChanges: () => false
+        hasPendingChanges: () => false
       },
       Mutation: {
-        updatePendingChange: (
+        updatePendingChanges: (
           _,
-          { pendingChanges, routineSetId },
+          { hasPendingChanges, routineSetId },
           { cache }
         ) => {
           cache.writeData({
             id: `RoutineSet:${routineSetId}`,
-            data: { pendingChanges }
+            data: { hasPendingChanges }
           });
 
-          return { updatePendingChange: { pendingChanges, routineSetId } };
+          return { updatePendingChanges: { hasPendingChanges, routineSetId } };
         }
       }
     }

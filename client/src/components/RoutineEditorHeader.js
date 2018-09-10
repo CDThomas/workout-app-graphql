@@ -43,7 +43,7 @@ class RoutineEditorHeader extends Component {
 
   hasPersisted() {
     const areChildrenPendingChanges = this.props.routine.sets
-      .map(({ pendingChanges }) => pendingChanges)
+      .map(({ hasPendingChanges }) => hasPendingChanges)
       .includes(true);
     const hasNamePersisted = this.props.routine.name === this.state.name;
 
@@ -98,7 +98,7 @@ export default withFragment(RoutineEditorHeader, {
       id
       name
       sets {
-        pendingChanges @client
+        hasPendingChanges @client
       }
     }
   `

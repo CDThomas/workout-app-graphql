@@ -132,7 +132,7 @@ class EditorSideBar extends Component {
                       id
                       setCount
                       repCount
-                      pendingChanges @client
+                      hasPendingChanges @client
                       exercise {
                         id
                         name
@@ -150,7 +150,7 @@ class EditorSideBar extends Component {
                     id: clientUUID(),
                     setCount: DEFAULT_SET_COUNT,
                     repCount: DEFAULT_REP_COUNT,
-                    pendingChanges: false,
+                    hasPendingChanges: false,
                     exercise: {
                       __typename: "Exercise",
                       id: exercise.id,
@@ -171,10 +171,12 @@ class EditorSideBar extends Component {
                     variables: { routineId }
                   });
 
-                  // This sucks, too
-                  createRoutineSet.pendingChanges = false;
+                  const newSet = {
+                    ...createRoutineSet,
+                    hasPendingChanges: false
+                  };
 
-                  data.routine.sets = [...data.routine.sets, createRoutineSet];
+                  data.routine.sets = [...data.routine.sets, newSet];
 
                   cache.writeQuery({
                     query: ROUTINE_EDITOR_QUERY,

@@ -28,9 +28,12 @@ const Label = styled("label")`
 `;
 
 const UPDATE_PENDING_CHANGES = gql`
-  mutation UpdatePendingChange($pendingChanges: Boolean!, $routineSetId: ID!) {
-    updatePendingChange(
-      pendingChanges: $pendingChanges
+  mutation updatePendingChanges(
+    $hasPendingChanges: Boolean!
+    $routineSetId: ID!
+  ) {
+    updatePendingChanges(
+      hasPendingChanges: $hasPendingChanges
       routineSetId: $routineSetId
     ) @client
   }
@@ -46,7 +49,7 @@ class RoutineSetEditableFields extends Component {
     return mutation(opts).then(() => {
       client.mutate({
         mutation: UPDATE_PENDING_CHANGES,
-        variables: { pendingChanges: false, routineSetId: id }
+        variables: { hasPendingChanges: false, routineSetId: id }
       });
     });
   }, 1000);
@@ -74,7 +77,7 @@ class RoutineSetEditableFields extends Component {
 
     await client.mutate({
       mutation: UPDATE_PENDING_CHANGES,
-      variables: { pendingChanges: true, routineSetId: id }
+      variables: { hasPendingChanges: true, routineSetId: id }
     });
 
     const fields = {};
