@@ -94,6 +94,24 @@ const resolvers = {
         info
       );
     },
+    async updateRoutineSet(parent, args, context, info) {
+      const {
+        input: { id, ...fields }
+      } = args;
+
+      const routineSetExists = await context.db.exists.RoutineSet({ id });
+      if (!routineSetExists) {
+        throw new Error(`RoutineSet with ID "${id}" does not exist`);
+      }
+
+      return context.db.mutation.updateRoutineSet(
+        {
+          where: { id },
+          data: fields
+        },
+        info
+      );
+    },
     deleteRoutineSet(parent, args, context, info) {
       const { id } = args;
       return context.db.mutation.deleteRoutineSet(

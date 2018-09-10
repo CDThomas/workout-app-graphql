@@ -6,6 +6,7 @@ import { Title } from "../components/typography";
 import Button from "./Button";
 import { Mutation } from "react-apollo";
 import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
+import RoutineSetEditableFields from "./RoutineSetEditableFields";
 
 const Card = styled("div")`
   background-color: #fff;
@@ -23,14 +24,6 @@ const BottomRow = styled("div")`
   justify-content: space-between;
 `;
 
-const CapsText = styled("span")`
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 0.3px;
-  color: #999;
-`;
-
 const SetCard = ({ set }) => {
   const { id, setCount, repCount, exercise, routine } = set;
   const routineId = routine.id;
@@ -39,9 +32,11 @@ const SetCard = ({ set }) => {
     <Card>
       <Title>{exercise.name}</Title>
       <BottomRow>
-        <CapsText>
-          {setCount} sets, {repCount} reps
-        </CapsText>
+        <RoutineSetEditableFields
+          id={id}
+          setCount={setCount}
+          repCount={repCount}
+        />
         <Mutation
           mutation={gql`
             mutation DeleteRoutineSet($id: ID!) {

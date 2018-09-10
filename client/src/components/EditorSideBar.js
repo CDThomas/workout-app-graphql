@@ -132,6 +132,7 @@ class EditorSideBar extends Component {
                       id
                       setCount
                       repCount
+                      hasPendingChanges @client
                       exercise {
                         id
                         name
@@ -149,6 +150,7 @@ class EditorSideBar extends Component {
                     id: clientUUID(),
                     setCount: DEFAULT_SET_COUNT,
                     repCount: DEFAULT_REP_COUNT,
+                    hasPendingChanges: false,
                     exercise: {
                       __typename: "Exercise",
                       id: exercise.id,
@@ -164,13 +166,17 @@ class EditorSideBar extends Component {
                   // TODO: Find a better way to share fragments with mutations.
                   //       This includes the query for the output of the mutation
                   //       an also the query to update the cache.
-
                   const data = cache.readQuery({
                     query: ROUTINE_EDITOR_QUERY,
                     variables: { routineId }
                   });
 
-                  data.routine.sets = [...data.routine.sets, createRoutineSet];
+                  const newSet = {
+                    ...createRoutineSet,
+                    hasPendingChanges: false
+                  };
+
+                  data.routine.sets = [...data.routine.sets, newSet];
 
                   cache.writeQuery({
                     query: ROUTINE_EDITOR_QUERY,

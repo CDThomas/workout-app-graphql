@@ -42,7 +42,12 @@ class RoutineEditorHeader extends Component {
   }, 1000);
 
   hasPersisted() {
-    return this.props.routine.name === this.state.name;
+    const areChildrenPendingChanges = this.props.routine.sets
+      .map(({ hasPendingChanges }) => hasPendingChanges)
+      .includes(true);
+    const hasNamePersisted = this.props.routine.name === this.state.name;
+
+    return !areChildrenPendingChanges && hasNamePersisted;
   }
 
   renderHelperText() {
@@ -92,6 +97,9 @@ export default withFragment(RoutineEditorHeader, {
     fragment RoutineEditorHeader_routine on Routine {
       id
       name
+      sets {
+        hasPendingChanges @client
+      }
     }
   `
 });
