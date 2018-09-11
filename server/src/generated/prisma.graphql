@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Sun Sep 09 2018 15:14:27 GMT+1000 (Australian Eastern Standard Time)
+# timestamp: Tue Sep 11 2018 21:27:40 GMT+1000 (Australian Eastern Standard Time)
 
 type AggregateExercise {
   count: Int!
@@ -10,10 +10,6 @@ type AggregateRoutine {
 }
 
 type AggregateRoutineSet {
-  count: Int!
-}
-
-type AggregateUser {
   count: Int!
 }
 
@@ -235,27 +231,21 @@ scalar Long
 type Mutation {
   createRoutine(data: RoutineCreateInput!): Routine!
   createRoutineSet(data: RoutineSetCreateInput!): RoutineSet!
-  createUser(data: UserCreateInput!): User!
   createExercise(data: ExerciseCreateInput!): Exercise!
   updateRoutine(data: RoutineUpdateInput!, where: RoutineWhereUniqueInput!): Routine
   updateRoutineSet(data: RoutineSetUpdateInput!, where: RoutineSetWhereUniqueInput!): RoutineSet
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateExercise(data: ExerciseUpdateInput!, where: ExerciseWhereUniqueInput!): Exercise
   deleteRoutine(where: RoutineWhereUniqueInput!): Routine
   deleteRoutineSet(where: RoutineSetWhereUniqueInput!): RoutineSet
-  deleteUser(where: UserWhereUniqueInput!): User
   deleteExercise(where: ExerciseWhereUniqueInput!): Exercise
   upsertRoutine(where: RoutineWhereUniqueInput!, create: RoutineCreateInput!, update: RoutineUpdateInput!): Routine!
   upsertRoutineSet(where: RoutineSetWhereUniqueInput!, create: RoutineSetCreateInput!, update: RoutineSetUpdateInput!): RoutineSet!
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertExercise(where: ExerciseWhereUniqueInput!, create: ExerciseCreateInput!, update: ExerciseUpdateInput!): Exercise!
   updateManyRoutines(data: RoutineUpdateInput!, where: RoutineWhereInput): BatchPayload!
   updateManyRoutineSets(data: RoutineSetUpdateInput!, where: RoutineSetWhereInput): BatchPayload!
-  updateManyUsers(data: UserUpdateInput!, where: UserWhereInput): BatchPayload!
   updateManyExercises(data: ExerciseUpdateInput!, where: ExerciseWhereInput): BatchPayload!
   deleteManyRoutines(where: RoutineWhereInput): BatchPayload!
   deleteManyRoutineSets(where: RoutineSetWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyExercises(where: ExerciseWhereInput): BatchPayload!
 }
 
@@ -289,15 +279,12 @@ type PageInfo {
 type Query {
   routines(where: RoutineWhereInput, orderBy: RoutineOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Routine]!
   routineSets(where: RoutineSetWhereInput, orderBy: RoutineSetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoutineSet]!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   exercises(where: ExerciseWhereInput, orderBy: ExerciseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exercise]!
   routine(where: RoutineWhereUniqueInput!): Routine
   routineSet(where: RoutineSetWhereUniqueInput!): RoutineSet
-  user(where: UserWhereUniqueInput!): User
   exercise(where: ExerciseWhereUniqueInput!): Exercise
   routinesConnection(where: RoutineWhereInput, orderBy: RoutineOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoutineConnection!
   routineSetsConnection(where: RoutineSetWhereInput, orderBy: RoutineSetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoutineSetConnection!
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   exercisesConnection(where: ExerciseWhereInput, orderBy: ExerciseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ExerciseConnection!
 
   """Fetches an object given its ID"""
@@ -310,7 +297,6 @@ type Query {
 type Routine implements Node {
   id: ID!
   name: String!
-  creator(where: UserWhereInput): User!
   sets(where: RoutineSetWhereInput, orderBy: RoutineSetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoutineSet!]
 }
 
@@ -326,7 +312,6 @@ type RoutineConnection {
 
 input RoutineCreateInput {
   name: String!
-  creator: UserCreateOneInput!
   sets: RoutineSetCreateManyWithoutRoutineInput
 }
 
@@ -337,7 +322,6 @@ input RoutineCreateOneWithoutSetsInput {
 
 input RoutineCreateWithoutSetsInput {
   name: String!
-  creator: UserCreateOneInput!
 }
 
 """An edge in a connection."""
@@ -643,7 +627,6 @@ input RoutineSubscriptionWhereInput {
 
 input RoutineUpdateInput {
   name: String
-  creator: UserUpdateOneInput
   sets: RoutineSetUpdateManyWithoutRoutineInput
 }
 
@@ -657,7 +640,6 @@ input RoutineUpdateOneWithoutSetsInput {
 
 input RoutineUpdateWithoutSetsDataInput {
   name: String
-  creator: UserUpdateOneInput
 }
 
 input RoutineUpsertWithoutSetsInput {
@@ -754,7 +736,6 @@ input RoutineWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
-  creator: UserWhereInput
   sets_every: RoutineSetWhereInput
   sets_some: RoutineSetWhereInput
   sets_none: RoutineSetWhereInput
@@ -767,210 +748,5 @@ input RoutineWhereUniqueInput {
 type Subscription {
   routine(where: RoutineSubscriptionWhereInput): RoutineSubscriptionPayload
   routineSet(where: RoutineSetSubscriptionWhereInput): RoutineSetSubscriptionPayload
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   exercise(where: ExerciseSubscriptionWhereInput): ExerciseSubscriptionPayload
-}
-
-type User implements Node {
-  id: ID!
-  name: String!
-}
-
-"""A connection to a list of items."""
-type UserConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [UserEdge]!
-  aggregate: AggregateUser!
-}
-
-input UserCreateInput {
-  name: String!
-}
-
-input UserCreateOneInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
-}
-
-"""An edge in a connection."""
-type UserEdge {
-  """The item at the end of the edge."""
-  node: User!
-
-  """A cursor for use in pagination."""
-  cursor: String!
-}
-
-enum UserOrderByInput {
-  id_ASC
-  id_DESC
-  name_ASC
-  name_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-  createdAt_ASC
-  createdAt_DESC
-}
-
-type UserPreviousValues {
-  id: ID!
-  name: String!
-}
-
-type UserSubscriptionPayload {
-  mutation: MutationType!
-  node: User
-  updatedFields: [String!]
-  previousValues: UserPreviousValues
-}
-
-input UserSubscriptionWhereInput {
-  """Logical AND on all given filters."""
-  AND: [UserSubscriptionWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [UserSubscriptionWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserSubscriptionWhereInput!]
-
-  """
-  The subscription event gets dispatched when it's listed in mutation_in
-  """
-  mutation_in: [MutationType!]
-
-  """
-  The subscription event gets only dispatched when one of the updated fields names is included in this list
-  """
-  updatedFields_contains: String
-
-  """
-  The subscription event gets only dispatched when all of the field names included in this list have been updated
-  """
-  updatedFields_contains_every: [String!]
-
-  """
-  The subscription event gets only dispatched when some of the field names included in this list have been updated
-  """
-  updatedFields_contains_some: [String!]
-  node: UserWhereInput
-}
-
-input UserUpdateDataInput {
-  name: String
-}
-
-input UserUpdateInput {
-  name: String
-}
-
-input UserUpdateOneInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
-  delete: Boolean
-  update: UserUpdateDataInput
-  upsert: UserUpsertNestedInput
-}
-
-input UserUpsertNestedInput {
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
-}
-
-input UserWhereInput {
-  """Logical AND on all given filters."""
-  AND: [UserWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [UserWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [UserWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  name: String
-
-  """All values that are not equal to given value."""
-  name_not: String
-
-  """All values that are contained in given list."""
-  name_in: [String!]
-
-  """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
-}
-
-input UserWhereUniqueInput {
-  id: ID
 }

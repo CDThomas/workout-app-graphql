@@ -2,7 +2,6 @@ mutation SeedData {
   createRoutine(
     data: {
       name: "Upper A"
-      creator: { create: { name: "Drew" } }
       sets: {
         create: [
           {

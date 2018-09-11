@@ -1,12 +1,5 @@
 import styled from "react-emotion";
 
-const Header = styled("h1")`
-  font-size: 20px;
-  line-height: 20px;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-`;
-
 const Title = styled("span")(({ weight = "light" }) => {
   const fontWeights = {
     light: 200,
@@ -30,4 +23,4 @@ const ErrorText = styled(Text)`
   color: red;
 `;
 
-export { ErrorText, Header, Text, Title };
+export { ErrorText, Text, Title };
