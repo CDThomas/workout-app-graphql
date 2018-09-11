@@ -9,16 +9,16 @@ const Content = styled("div")`
   padding: 25px;
 `;
 
+const ROUTINE_LIST_PAGE_QUERY = gql`
+  query RoutineListPageQuery {
+    ...RoutineList_data
+  }
+  ${RoutineList.fragments.data}
+`;
+
 const RoutineListPage = () => {
   return (
-    <Query
-      query={gql`
-        query RoutineListPageQuery {
-          ...RoutineList_data
-        }
-        ${RoutineList.fragments.data}
-      `}
-    >
+    <Query query={ROUTINE_LIST_PAGE_QUERY}>
       {({ loading, error, data }) => {
         if (loading) return <p>Loading...</p>;
         if (error) return <p>Error :(</p>;
@@ -35,4 +35,5 @@ const RoutineListPage = () => {
   );
 };
 
+export { ROUTINE_LIST_PAGE_QUERY };
 export default RoutineListPage;

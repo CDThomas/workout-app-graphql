@@ -1,17 +1,56 @@
 import React from "react";
 import gql from "graphql-tag";
+import { Mutation } from "react-apollo";
 import withFragment from "../utils/withFragment";
+import { withRouter } from "react-router-dom";
 import RoutineItem from "./RoutineItem";
 import Panel from "./Panel";
 import List from "./List";
-import { Header } from "./typography";
+import { Title } from "./typography";
+import SubtleButton from "./SubtleButton";
+import { ROUTINE_LIST_PAGE_QUERY } from "../pages/RoutineListPage";
 
-const RoutineList = ({ data }) => {
+const RoutineList = ({ data, history }) => {
   const { routines } = data;
   return (
     <Panel>
       <Panel.Header>
-        <Header>Routines</Header>
+        <Title weight="medium">Routines</Title>
+        <Mutation
+          mutation={gql`
+            mutation CreateRoutine {
+              createRoutine {
+                id
+                ...RoutineItem_routine
+              }
+            }
+            ${RoutineItem.fragments.routine}
+          `}
+          update={(cache, { data: { createRoutine } }) => {
+            const data = cache.readQuery({
+              query: ROUTINE_LIST_PAGE_QUERY
+            });
+
+            data.routines = [createRoutine, ...data.routines];
+
+            cache.writeQuery({
+              query: ROUTINE_LIST_PAGE_QUERY,
+              data
+            });
+          }}
+          onCompleted={({ createRoutine }) => {
+            const { id } = createRoutine;
+            history.push(`/routines/${id}`);
+          }}
+        >
+          {createRoutine => {
+            return (
+              <SubtleButton onClick={() => createRoutine()}>
+                create one
+              </SubtleButton>
+            );
+          }}
+        </Mutation>
       </Panel.Header>
       <Panel.Content fullWidth>
         <List>
@@ -24,14 +63,16 @@ const RoutineList = ({ data }) => {
   );
 };
 
-export default withFragment(RoutineList, {
-  data: gql`
-    fragment RoutineList_data on Query {
-      routines {
-        id
-        ...RoutineItem_routine
+export default withRouter(
+  withFragment(RoutineList, {
+    data: gql`
+      fragment RoutineList_data on Query {
+        routines {
+          id
+          ...RoutineItem_routine
+        }
       }
-    }
-    ${RoutineItem.fragments.routine}
-  `
-});
+      ${RoutineItem.fragments.routine}
+    `
+  })
+);
