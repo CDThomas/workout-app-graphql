@@ -36,16 +36,6 @@ const resolvers = {
     routine(parent, args, context, info) {
       return context.db.query.routine({ where: { id: args.id } }, info);
     },
-    routinesByUser(parent, args, context, info) {
-      return context.db.query.routines(
-        {
-          where: {
-            creator: { id: args.userId }
-          }
-        },
-        info
-      );
-    },
     routines(parent, args, context, info) {
       return context.db.query.routines(null, info);
     }
@@ -55,6 +45,16 @@ const resolvers = {
       return context.db.mutation.createExercise(
         {
           data: { name: args.name }
+        },
+        info
+      );
+    },
+    createRoutine(parent, args, context, info) {
+      return context.db.mutation.createRoutine(
+        {
+          data: {
+            name: "Unnamed Routine"
+          }
         },
         info
       );
@@ -117,14 +117,6 @@ const resolvers = {
       return context.db.mutation.deleteRoutineSet(
         {
           where: { id }
-        },
-        info
-      );
-    },
-    createUser(parent, args, context, info) {
-      return context.db.mutation.createUser(
-        {
-          data: { name: args.name }
         },
         info
       );

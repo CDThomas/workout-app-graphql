@@ -1,12 +1,6 @@
-type User {
-  id: ID! @unique
-  name: String!
-}
-
 type Routine {
   id: ID! @unique
   name: String!
-  creator: User!
   sets: [RoutineSet!]!
 }
 
