@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import withFragment from "../utils/withFragment";
 import gql from "graphql-tag";
 import { withRouter } from "react-router";
-import styled from "react-emotion";
+import SubtleButton from "./SubtleButton";
 import SideBar from "./SideBar";
 import SearchBar from "./SearchBar";
 import CreateExerciseModal from "./CreateExerciseModal";
@@ -14,17 +14,6 @@ import clientUUID from "../utils/clientUUID";
 
 const DEFAULT_SET_COUNT = 3;
 const DEFAULT_REP_COUNT = 8;
-
-const Button = styled("button")`
-  font-size: 14px;
-  font-weight: 400;
-  padding-bottom: 0;
-  color: #005eaf;
-  border: none;
-  outline: none;
-  text-decoration: underline;
-  cursor: pointer;
-`;
 
 const fragment = {
   data: gql`
@@ -113,7 +102,9 @@ class EditorSideBar extends Component {
           </ApolloConsumer>
           <Text>
             or
-            <Button onClick={this.handleCreateExerciseClick}>create one</Button>
+            <SubtleButton onClick={this.handleCreateExerciseClick}>
+              create one
+            </SubtleButton>
           </Text>
           <CreateExerciseModal
             isOpen={isModalOpen}
