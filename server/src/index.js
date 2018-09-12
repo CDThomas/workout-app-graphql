@@ -112,6 +112,15 @@ const resolvers = {
         info
       );
     },
+    deleteRoutine(parent, args, context, info) {
+      const { id } = args;
+      return context.db.mutation.deleteRoutine(
+        {
+          where: { id }
+        },
+        info
+      );
+    },
     deleteRoutineSet(parent, args, context, info) {
       const { id } = args;
       return context.db.mutation.deleteRoutineSet(

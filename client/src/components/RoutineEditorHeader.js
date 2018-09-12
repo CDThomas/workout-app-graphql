@@ -1,22 +1,28 @@
 import React, { Component } from "react";
 import RoutineNameInput from "./RoutineNameInput";
+import Button from "./Button";
+import ConfirmDialog from "./ConfirmDialog";
 import { Text, ErrorText } from "./typography";
 import { Mutation } from "react-apollo";
 import withFragment from "../utils/withFragment";
 import gql from "graphql-tag";
 import debounce from "lodash/debounce";
 import styled from "react-emotion";
+import { withRouter } from "react-router-dom";
+import { ROUTINE_LIST_PAGE_QUERY } from "../pages/RoutineListPage";
 
 const Header = styled("header")`
   margin-bottom: 20px;
   display: flex;
   align-items: flex-end;
+  justify-content: space-between;
 `;
 
 class RoutineEditorHeader extends Component {
   state = {
     error: null,
-    name: this.props.routine.name
+    name: this.props.routine.name,
+    isDeleteRoutineConfirmOpen: false
   };
 
   handleNameChange = (evt, updateRoutineMutation) => {
@@ -35,6 +41,12 @@ class RoutineEditorHeader extends Component {
     this.doMutation(updateRoutineMutation, {
       variables: { input: { id, name: newName } }
     });
+  };
+
+  handleToggleConfirmationDialog = () => {
+    this.setState(prevState => ({
+      isDeleteRoutineConfirmOpen: !prevState.isDeleteRoutineConfirmOpen
+    }));
   };
 
   doMutation = debounce((mutation, opts) => {
@@ -63,43 +75,99 @@ class RoutineEditorHeader extends Component {
   }
 
   render() {
-    const { name } = this.state;
+    const { name, isDeleteRoutineConfirmOpen } = this.state;
+    const { routine, history } = this.props;
 
     return (
       <Header>
+        <div>
+          <Mutation
+            mutation={gql`
+              mutation UpdateRoutine($input: UpdateRoutineInput!) {
+                updateRoutine(input: $input) {
+                  id
+                  name
+                }
+              }
+            `}
+          >
+            {updateRoutine => {
+              return (
+                <RoutineNameInput
+                  value={name}
+                  onChange={evt => this.handleNameChange(evt, updateRoutine)}
+                />
+              );
+            }}
+          </Mutation>
+          {this.renderHelperText()}
+        </div>
+        <Button onClick={this.handleToggleConfirmationDialog} color="red">
+          Delete Routine
+        </Button>
         <Mutation
           mutation={gql`
-            mutation UpdateRoutine($input: UpdateRoutineInput!) {
-              updateRoutine(input: $input) {
+            mutation DeleteRoutine($id: ID!) {
+              deleteRoutine(id: $id) {
                 id
-                name
               }
             }
           `}
+          variables={{ id: routine.id }}
+          optimisticResponse={{
+            __typename: "Mutation",
+            deleteRoutine: {
+              __typename: "Routine",
+              id: routine.id
+            }
+          }}
+          update={(cache, { data: { deleteRoutine } }) => {
+            const data = cache.readQuery({
+              query: ROUTINE_LIST_PAGE_QUERY
+            });
+
+            data.routines = data.routines.filter(
+              routine => routine.id !== deleteRoutine.id
+            );
+
+            cache.writeQuery({
+              query: ROUTINE_LIST_PAGE_QUERY,
+              data
+            });
+          }}
         >
-          {updateRoutine => {
+          {deleteRoutine => {
             return (
-              <RoutineNameInput
-                value={name}
-                onChange={evt => this.handleNameChange(evt, updateRoutine)}
+              <ConfirmDialog
+                text="Are you sure you want to delete this routine?"
+                confirmButtonText="Delete"
+                confirmButtonColor="red"
+                isOpen={isDeleteRoutineConfirmOpen}
+                onConfirm={() => {
+                  deleteRoutine();
+                  history.push("/routines");
+                }}
+                onCancel={this.handleToggleConfirmationDialog}
+                onRequestClose={this.handleToggleConfirmationDialog}
               />
             );
           }}
         </Mutation>
-        {this.renderHelperText()}
       </Header>
     );
   }
 }
 
-export default withFragment(RoutineEditorHeader, {
-  routine: gql`
-    fragment RoutineEditorHeader_routine on Routine {
-      id
-      name
-      sets {
-        hasPendingChanges @client
+export default withRouter(
+  withFragment(RoutineEditorHeader, {
+    routine: gql`
+      fragment RoutineEditorHeader_routine on Routine {
+        id
+        name
+        sets {
+          hasPendingChanges @client
+        }
       }
-    }
-  `
-});
+    `
+  })
+);
