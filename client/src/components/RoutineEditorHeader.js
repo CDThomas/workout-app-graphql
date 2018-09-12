@@ -142,7 +142,6 @@ class RoutineEditorHeader extends Component {
                 text="Are you sure you want to delete this routine?"
                 confirmButtonText="Delete"
                 confirmButtonColor="red"
-                isOpen={true}
                 isOpen={isDeleteRoutineConfirmOpen}
                 onConfirm={() => {
                   deleteRoutine();
