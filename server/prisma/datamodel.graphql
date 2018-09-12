@@ -2,11 +2,12 @@ type Routine {
   id: ID! @unique
   name: String!
   sets: [RoutineSet!]!
+    @relation(name: "RoutineSetsByRoutine", onDelete: CASCADE)
 }
 
 type RoutineSet {
   id: ID! @unique
-  routine: Routine!
+  routine: Routine! @relation(name: "RoutineSetsByRoutine")
   exercise: Exercise!
   setCount: Int! @default(value: 0)
   repCount: Int! @default(value: 0)

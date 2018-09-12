@@ -12,6 +12,7 @@ type Mutation {
   createRoutineSet(input: CreateRoutineSetInput!): RoutineSet
   updateRoutine(input: UpdateRoutineInput!): Routine
   updateRoutineSet(input: UpdateRoutineSetInput!): RoutineSet
+  deleteRoutine(id: ID!): Routine
   deleteRoutineSet(id: ID!): RoutineSet
 }
 
