@@ -16,4 +16,10 @@ type RoutineSet {
 type Exercise {
   id: ID! @unique
   name: String!
+  mainMuscleWorked: Muscle!
+}
+
+type Muscle {
+  id: ID! @unique
+  name: String!
 }

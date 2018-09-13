@@ -1,7 +1,11 @@
 # source: http://localhost:4466
-# timestamp: Tue Sep 11 2018 21:27:40 GMT+1000 (Australian Eastern Standard Time)
+# timestamp: Thu Sep 13 2018 21:06:13 GMT+1000 (Australian Eastern Standard Time)
 
 type AggregateExercise {
+  count: Int!
+}
+
+type AggregateMuscle {
   count: Int!
 }
 
@@ -21,6 +25,7 @@ type BatchPayload {
 type Exercise implements Node {
   id: ID!
   name: String!
+  mainMuscleWorked(where: MuscleWhereInput): Muscle!
 }
 
 """A connection to a list of items."""
@@ -35,6 +40,7 @@ type ExerciseConnection {
 
 input ExerciseCreateInput {
   name: String!
+  mainMuscleWorked: MuscleCreateOneInput!
 }
 
 input ExerciseCreateOneInput {
@@ -108,10 +114,12 @@ input ExerciseSubscriptionWhereInput {
 
 input ExerciseUpdateDataInput {
   name: String
+  mainMuscleWorked: MuscleUpdateOneInput
 }
 
 input ExerciseUpdateInput {
   name: String
+  mainMuscleWorked: MuscleUpdateOneInput
 }
 
 input ExerciseUpdateOneInput {
@@ -216,6 +224,7 @@ input ExerciseWhereInput {
 
   """All values not ending with the given string."""
   name_not_ends_with: String
+  mainMuscleWorked: MuscleWhereInput
 }
 
 input ExerciseWhereUniqueInput {
@@ -228,24 +237,234 @@ Long can represent values between -(2^63) and 2^63 - 1.
 """
 scalar Long
 
+type Muscle implements Node {
+  id: ID!
+  name: String!
+}
+
+"""A connection to a list of items."""
+type MuscleConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [MuscleEdge]!
+  aggregate: AggregateMuscle!
+}
+
+input MuscleCreateInput {
+  name: String!
+}
+
+input MuscleCreateOneInput {
+  create: MuscleCreateInput
+  connect: MuscleWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type MuscleEdge {
+  """The item at the end of the edge."""
+  node: Muscle!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum MuscleOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type MusclePreviousValues {
+  id: ID!
+  name: String!
+}
+
+type MuscleSubscriptionPayload {
+  mutation: MutationType!
+  node: Muscle
+  updatedFields: [String!]
+  previousValues: MusclePreviousValues
+}
+
+input MuscleSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MuscleSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MuscleSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MuscleSubscriptionWhereInput!]
+
+  """
+  The subscription event gets dispatched when it's listed in mutation_in
+  """
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: MuscleWhereInput
+}
+
+input MuscleUpdateDataInput {
+  name: String
+}
+
+input MuscleUpdateInput {
+  name: String
+}
+
+input MuscleUpdateOneInput {
+  create: MuscleCreateInput
+  connect: MuscleWhereUniqueInput
+  delete: Boolean
+  update: MuscleUpdateDataInput
+  upsert: MuscleUpsertNestedInput
+}
+
+input MuscleUpsertNestedInput {
+  update: MuscleUpdateDataInput!
+  create: MuscleCreateInput!
+}
+
+input MuscleWhereInput {
+  """Logical AND on all given filters."""
+  AND: [MuscleWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [MuscleWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [MuscleWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+}
+
+input MuscleWhereUniqueInput {
+  id: ID
+}
+
 type Mutation {
   createRoutine(data: RoutineCreateInput!): Routine!
   createRoutineSet(data: RoutineSetCreateInput!): RoutineSet!
+  createMuscle(data: MuscleCreateInput!): Muscle!
   createExercise(data: ExerciseCreateInput!): Exercise!
   updateRoutine(data: RoutineUpdateInput!, where: RoutineWhereUniqueInput!): Routine
   updateRoutineSet(data: RoutineSetUpdateInput!, where: RoutineSetWhereUniqueInput!): RoutineSet
+  updateMuscle(data: MuscleUpdateInput!, where: MuscleWhereUniqueInput!): Muscle
   updateExercise(data: ExerciseUpdateInput!, where: ExerciseWhereUniqueInput!): Exercise
   deleteRoutine(where: RoutineWhereUniqueInput!): Routine
   deleteRoutineSet(where: RoutineSetWhereUniqueInput!): RoutineSet
+  deleteMuscle(where: MuscleWhereUniqueInput!): Muscle
   deleteExercise(where: ExerciseWhereUniqueInput!): Exercise
   upsertRoutine(where: RoutineWhereUniqueInput!, create: RoutineCreateInput!, update: RoutineUpdateInput!): Routine!
   upsertRoutineSet(where: RoutineSetWhereUniqueInput!, create: RoutineSetCreateInput!, update: RoutineSetUpdateInput!): RoutineSet!
+  upsertMuscle(where: MuscleWhereUniqueInput!, create: MuscleCreateInput!, update: MuscleUpdateInput!): Muscle!
   upsertExercise(where: ExerciseWhereUniqueInput!, create: ExerciseCreateInput!, update: ExerciseUpdateInput!): Exercise!
   updateManyRoutines(data: RoutineUpdateInput!, where: RoutineWhereInput): BatchPayload!
   updateManyRoutineSets(data: RoutineSetUpdateInput!, where: RoutineSetWhereInput): BatchPayload!
+  updateManyMuscles(data: MuscleUpdateInput!, where: MuscleWhereInput): BatchPayload!
   updateManyExercises(data: ExerciseUpdateInput!, where: ExerciseWhereInput): BatchPayload!
   deleteManyRoutines(where: RoutineWhereInput): BatchPayload!
   deleteManyRoutineSets(where: RoutineSetWhereInput): BatchPayload!
+  deleteManyMuscles(where: MuscleWhereInput): BatchPayload!
   deleteManyExercises(where: ExerciseWhereInput): BatchPayload!
 }
 
@@ -279,12 +498,15 @@ type PageInfo {
 type Query {
   routines(where: RoutineWhereInput, orderBy: RoutineOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Routine]!
   routineSets(where: RoutineSetWhereInput, orderBy: RoutineSetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoutineSet]!
+  muscles(where: MuscleWhereInput, orderBy: MuscleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Muscle]!
   exercises(where: ExerciseWhereInput, orderBy: ExerciseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Exercise]!
   routine(where: RoutineWhereUniqueInput!): Routine
   routineSet(where: RoutineSetWhereUniqueInput!): RoutineSet
+  muscle(where: MuscleWhereUniqueInput!): Muscle
   exercise(where: ExerciseWhereUniqueInput!): Exercise
   routinesConnection(where: RoutineWhereInput, orderBy: RoutineOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoutineConnection!
   routineSetsConnection(where: RoutineSetWhereInput, orderBy: RoutineSetOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoutineSetConnection!
+  musclesConnection(where: MuscleWhereInput, orderBy: MuscleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MuscleConnection!
   exercisesConnection(where: ExerciseWhereInput, orderBy: ExerciseOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ExerciseConnection!
 
   """Fetches an object given its ID"""
@@ -748,5 +970,6 @@ input RoutineWhereUniqueInput {
 type Subscription {
   routine(where: RoutineSubscriptionWhereInput): RoutineSubscriptionPayload
   routineSet(where: RoutineSetSubscriptionWhereInput): RoutineSetSubscriptionPayload
+  muscle(where: MuscleSubscriptionWhereInput): MuscleSubscriptionPayload
   exercise(where: ExerciseSubscriptionWhereInput): ExerciseSubscriptionPayload
 }
