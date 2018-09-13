@@ -33,6 +33,9 @@ const resolvers = {
 
       return context.db.query.exercises({ ...queryArgs, first: 15 }, info);
     },
+    muscles(parent, args, context, info) {
+      return context.db.query.muscles(null, info);
+    },
     routine(parent, args, context, info) {
       return context.db.query.routine({ where: { id: args.id } }, info);
     },
@@ -42,9 +45,15 @@ const resolvers = {
   },
   Mutation: {
     createExercise(parent, args, context, info) {
+      const {
+        input: { name, mainMuscleWorkedId }
+      } = args;
       return context.db.mutation.createExercise(
         {
-          data: { name: args.name }
+          data: {
+            name,
+            mainMuscleWorked: { connect: { id: mainMuscleWorkedId } }
+          }
         },
         info
       );
