@@ -7,22 +7,22 @@ mutation SeedData {
           {
             setCount: 3
             repCount: 8
-            exercise: { create: { name: "Bench Press" } }
+            exercise: {
+              create: {
+                name: "Bench Press"
+                mainMuscleWorked: { create: { name: "chest" } }
+              }
+            }
           }
           {
             setCount: 3
             repCount: 8
-            exercise: { create: { name: "Seated Cable Row" } }
-          }
-          {
-            setCount: 3
-            repCount: 8
-            exercise: { create: { name: "Incline Dumbell Bench Press" } }
-          }
-          {
-            setCount: 3
-            repCount: 8
-            exercise: { create: { name: "Lat Pulldown" } }
+            exercise: {
+              create: {
+                name: "Seated Cable Row"
+                mainMuscleWorked: { create: { name: "lats" } }
+              }
+            }
           }
         ]
       }
