@@ -11,9 +11,15 @@ import { Title, Text } from "./typography";
 import { Mutation, ApolloConsumer } from "react-apollo";
 import { ROUTINE_EDITOR_QUERY } from "../pages/RoutineEditorPage";
 import clientUUID from "../utils/clientUUID";
+import capitalize from "lodash/capitalize";
+import styled from "react-emotion";
 
 const DEFAULT_SET_COUNT = 3;
 const DEFAULT_REP_COUNT = 8;
+
+const MainMuscleWorked = styled("div")`
+  padding-top: 10px;
+`;
 
 const fragment = {
   data: gql`
@@ -21,8 +27,13 @@ const fragment = {
       exercises(filter: $exerciseFilter) {
         id
         name
+        mainMuscleWorked {
+          name
+        }
       }
+      ...CreateExerciseModal_data
     }
+    ${CreateExerciseModal.fragments.data}
   `
 };
 
@@ -110,6 +121,7 @@ class EditorSideBar extends Component {
             isOpen={isModalOpen}
             onRequestClose={this.handleCloseModal}
             onExerciseCreated={this.handleExerciseCreated}
+            data={data}
           />
         </SideBar.Header>
         <SideBar.Content>
@@ -192,6 +204,9 @@ class EditorSideBar extends Component {
                     }
                   >
                     <Title>{exercise.name}</Title>
+                    <MainMuscleWorked>
+                      <Text>{capitalize(exercise.mainMuscleWorked.name)}</Text>
+                    </MainMuscleWorked>
                   </List.Item>
                 )}
               </Mutation>
