@@ -28,6 +28,7 @@ const fragment = {
         id
         name
         mainMuscleWorked {
+          id
           name
         }
       }
