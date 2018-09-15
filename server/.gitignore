@@ -1,0 +1,8 @@
+# This is important to include in server dir for Now to automatically exclude these files
+
+.vscode
+.DS_Store
+node_modules
+
+.env.local
+.env.production.local

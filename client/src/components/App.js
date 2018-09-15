@@ -12,6 +12,7 @@ import HeaderNav from "./HeaderNav";
 import styled from "react-emotion";
 
 const client = new ApolloClient({
+  uri: process.env.REACT_APP_GRAPHQL_URI,
   clientState: {
     resolvers: {
       RoutineSet: {

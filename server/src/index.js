@@ -3,6 +3,8 @@ const { Prisma } = require("prisma-binding");
 const morgan = require("morgan");
 const path = require("path");
 
+require("dotenv").config();
+
 const resolvers = {
   Query: {
     exercises(parent, args, context, info) {
@@ -149,7 +151,8 @@ const server = new GraphQLServer({
     ...req,
     db: new Prisma({
       typeDefs: path.resolve(__dirname, "generated/prisma.graphql"),
-      endpoint: "http://localhost:4466"
+      endpoint: process.env.PRISMA_ENDPOINT,
+      secret: process.env.PRISMA_SECRET
     })
   })
 });
